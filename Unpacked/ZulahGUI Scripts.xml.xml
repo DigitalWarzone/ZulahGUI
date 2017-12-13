@@ -1,0 +1,2208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE MudletPackage>
+<MudletPackage version="1.0">
+    <ScriptPackage>
+        <ScriptGroup isActive="yes" isFolder="yes">
+            <name>ZulahGUI 2.0</name>
+            <packageName></packageName>
+            <script></script>
+            <eventHandlerList/>
+            <Script isActive="yes" isFolder="no">
+                <name>Initialize GUI</name>
+                <packageName></packageName>
+                <script>function startupGUI()
+
+-----------------------------------------------------------------------------
+-- Don't mess with anything after this unless you KNOW what you're doing.
+-----------------------------------------------------------------------------
+
+	WindowWidth=0
+	WindowHeight=0
+	WindowWidth, WindowHeight = getMainWindowSize()
+
+	borderLeft = 0
+	borderRight = 0
+	borderTop = 0
+	borderBottom = 0
+
+	---------------------------------
+	-- UI Border Colors
+	---------------------------------
+
+	BGColorR = 0
+	BGColorG = 0
+	BGColorB = 0
+
+	---------------------------------
+	-- Click Modifier
+	---------------------------------
+
+	Movement_Modifier = 1
+
+	modify_10BTNPushed = 0
+	modify_100BTNPushed = 0
+	settingsExtraOpen = 0
+
+	zlayout = 1
+	savedLayoutName = &quot;Default&quot;
+	noResizeOption = 0
+	selectedPluginCount = 1
+
+	settingsPage = 1
+	pluginCounter = 0
+
+	ZulahGUI2_VarTable = {}
+
+	loadedPluginsTables = {}
+	resetSwitch_Y()
+	resetSwitch_X()
+
+	---------------------------------
+	-- Load Layouts
+	---------------------------------
+
+	loadZulahGUIVariables()
+
+	---------------------------------
+	-- Check Files For ZulahGUI Plugins
+	---------------------------------
+
+	scanDir()
+
+	mainSettingsBTN()
+
+	pluginPage()
+
+	---------------------------------
+	-- Setup Individual Plugins Settings
+	---------------------------------
+
+	extraSettingsFunction()
+
+	---------------------------------
+	-- Set Borders and Color them
+	---------------------------------
+
+	setBorderLeft(borderLeft)
+	setBorderBottom(borderBottom)
+	setBorderTop(borderTop)
+	setBorderRight(borderRight)
+
+	setBorderColor(BGColorR, BGColorG, BGColorB)
+
+	mainSettingsGear()
+end</script>
+                <eventHandlerList/>
+            </Script>
+            <ScriptGroup isActive="yes" isFolder="yes">
+                <name>Settings Window</name>
+                <packageName></packageName>
+                <script>-------------------------------------------------
+--         Put your Lua functions here.        --
+--                                             --
+-- Note that you can also use external Scripts --
+-------------------------------------------------
+</script>
+                <eventHandlerList/>
+                <Script isActive="yes" isFolder="no">
+                    <name>Main Settings Window</name>
+                    <packageName></packageName>
+                    <script>function mainSettingsBTN()
+	------------------------------------------------------
+	-- Create Settings Container
+	------------------------------------------------------
+
+	settingsWindow = Geyser.Container:new({
+		name = &quot;settingsWindow&quot;,
+		x=WindowWidth/2-200, y=WindowHeight/2-212,
+	   width = 400, height=425,
+	})
+
+	------------------------------------------------------
+	-- Create Settings Background
+	------------------------------------------------------
+
+	settingsBG = Geyser.Label:new({
+	  name = &quot;settingsBG&quot;,
+	  x=0, y=0,
+	  width=400, height=425,
+	}, settingsWindow)
+	setBackgroundImage(&quot;settingsBG&quot;, getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/settingsMain.png&quot;);
+
+	------------------------------------------------------
+	-- Create Buttons 
+	------------------------------------------------------
+
+	settingscloseBTN = Geyser.Label:new({
+	  name = &quot;settingscloseBTN&quot;,
+	  x=375, y=0,
+	  width=25, height=25,
+	}, settingsWindow)
+	setBackgroundImage(&quot;settingscloseBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/closeBTN.png&quot;);
+
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+
+	modify_10BTN = Geyser.Label:new({
+	  name = &quot;modify_10BTN&quot;,
+	  x=335, y=45,
+	  width=45, height=45,
+	}, settingsWindow)
+	setBackgroundImage(&quot;modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10Off.png&quot;);
+
+	modify_100BTN = Geyser.Label:new({
+	  name = &quot;modify_100BTN&quot;,
+	  x=335, y=90,
+	  width=45, height=45,
+	}, settingsWindow)
+	setBackgroundImage(&quot;modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100Off.png&quot;);
+
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+
+	topBorderLeftBTN = Geyser.Label:new({
+	  name = &quot;topBorderLeftBTN&quot;,
+	  x=25, y=50,
+	  width=20, height=20,
+	}, settingsWindow)
+	setBackgroundImage(&quot;topBorderLeftBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/leftBTN.png&quot;);
+
+	topBorderRightBTN = Geyser.Label:new({
+	  name = &quot;topBorderRightBTN&quot;,
+	  x=98, y=50,
+	  width=20, height=20,
+	}, settingsWindow)
+	setBackgroundImage(&quot;topBorderRightBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/rightBTN.png&quot;);
+
+----------------------------------------------------------------------
+
+	leftBorderLeftBTN = Geyser.Label:new({
+	  name = &quot;leftBorderLeftBTN&quot;,
+	  x=25, y=70,
+	  width=20, height=20,
+	}, settingsWindow)
+	setBackgroundImage(&quot;leftBorderLeftBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/leftBTN.png&quot;);
+
+	leftBorderRightBTN = Geyser.Label:new({
+	  name = &quot;leftBorderRightBTN&quot;,
+	  x=98, y=70,
+	  width=20, height=20,
+	}, settingsWindow)
+	setBackgroundImage(&quot;leftBorderRightBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/rightBTN.png&quot;);
+
+----------------------------------------------------------------------
+
+	rightBorderLeftBTN = Geyser.Label:new({
+	  name = &quot;rightBorderLeftBTN&quot;,
+	  x=25, y=90,
+	  width=20, height=20,
+	}, settingsWindow)
+	setBackgroundImage(&quot;rightBorderLeftBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/leftBTN.png&quot;);
+
+	rightBorderRightBTN = Geyser.Label:new({
+	  name = &quot;rightBorderRightBTN&quot;,
+	  x=98, y=90,
+	  width=20, height=20,
+	}, settingsWindow)
+	setBackgroundImage(&quot;rightBorderRightBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/rightBTN.png&quot;);
+
+----------------------------------------------------------------------
+
+	bottomBorderLeftBTN = Geyser.Label:new({
+	  name = &quot;bottomBorderLeftBTN&quot;,
+	  x=25, y=110,
+	  width=20, height=20,
+	}, settingsWindow)
+	setBackgroundImage(&quot;bottomBorderLeftBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/leftBTN.png&quot;);
+
+	bottomBorderRightBTN = Geyser.Label:new({
+	  name = &quot;bottomBorderRightBTN&quot;,
+	  x=98, y=110,
+	  width=20, height=20,
+	}, settingsWindow)
+	setBackgroundImage(&quot;bottomBorderRightBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/rightBTN.png&quot;);
+
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+
+	borderNameConsole = Geyser.MiniConsole:new({
+	  name = &quot;borderNameConsole&quot;,
+	  x=120, y=50,
+	  width=200, height=85,
+	}, settingsWindow)
+   setBackgroundColor(&quot;borderNameConsole&quot;,0,0,0,255);
+	borderNameConsole:setWrap(30)
+	borderNameConsole:setFontSize(13)
+
+	cecho(&quot;borderNameConsole&quot;, &quot;&lt;grey&gt;: Top Border\n&quot;)
+	cecho(&quot;borderNameConsole&quot;, &quot;&lt;grey&gt;: Left Border\n&quot;)
+	cecho(&quot;borderNameConsole&quot;, &quot;&lt;grey&gt;: Right Border\n&quot;)
+	cecho(&quot;borderNameConsole&quot;, &quot;&lt;grey&gt;: Bottom Border\n&quot;)
+
+	borderConsole = Geyser.MiniConsole:new({
+	  name = &quot;borderConsole&quot;,
+	  x=50, y=50,
+	  width=40, height=85,
+	}, settingsWindow)
+   setBackgroundColor(&quot;borderConsole&quot;,0,0,0,255);
+	borderConsole:setWrap(5)
+	borderConsole:setFontSize(13)
+
+----------------------------------------------------------------------
+------------------------------------------------------
+
+	uiColorRSettingsUpBTN = Geyser.Label:new({
+	  name = &quot;uiColorRSettingsUpBTN&quot;,
+	  x=185, y=142,
+	  width=20, height=20,
+	}, settingsWindow)
+	setBackgroundImage(&quot;uiColorRSettingsUpBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/upBTN.png&quot;);
+
+	uiColorRSettingsDownBTN = Geyser.Label:new({
+	  name = &quot;uiColorRSettingsDownBTN&quot;,
+	  x=185, y=197,
+	  width=20, height=20,
+	}, settingsWindow)
+	setBackgroundImage(&quot;uiColorRSettingsDownBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/downBTN.png&quot;);
+
+
+	uiColorGSettingsUpBTN = Geyser.Label:new({
+	  name = &quot;uiColorGSettingsUpBTN&quot;,
+	  x=245, y=142,
+	  width=20, height=20,
+	}, settingsWindow)
+	setBackgroundImage(&quot;uiColorGSettingsUpBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/upBTN.png&quot;);
+
+	uiColorGSettingsDownBTN = Geyser.Label:new({
+	  name = &quot;uiColorGSettingsDownBTN&quot;,
+	  x=245, y=197,
+	  width=20, height=20,
+	}, settingsWindow)
+	setBackgroundImage(&quot;uiColorGSettingsDownBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/downBTN.png&quot;);
+
+
+	uiColorBSettingsUpBTN = Geyser.Label:new({
+	  name = &quot;uiColorBSettingsUpBTN&quot;,
+	  x=305, y=142,
+	  width=20, height=20,
+	}, settingsWindow)
+	setBackgroundImage(&quot;uiColorBSettingsUpBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/upBTN.png&quot;);
+
+	uiColorBSettingsDownBTN = Geyser.Label:new({
+	  name = &quot;uiColorBSettingsDownBTN&quot;,
+	  x=305, y=197,
+	  width=20, height=20,
+	}, settingsWindow)
+	setBackgroundImage(&quot;uiColorBSettingsDownBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/downBTN.png&quot;);
+
+------------------------------------------------------
+------------------------------------------------------
+
+	uiColorSettingsThemeConsole = Geyser.MiniConsole:new({
+	  name = &quot;uiColorSettingsThemeConsole&quot;,
+	  x=40, y=172,
+	  width=125, height=20,
+	}, settingsWindow)
+   setBackgroundColor(&quot;uiColorSettingsThemeConsole&quot;,0,0,0,255);
+	uiColorSettingsThemeConsole:setWrap(30)
+	uiColorSettingsThemeConsole:setFontSize(12)
+
+	uiColorRSettingsThemeConsole = Geyser.MiniConsole:new({
+	  name = &quot;uiColorRSettingsThemeConsole&quot;,
+	  x=165, y=172,
+	  width=50, height=20,
+	}, settingsWindow)
+   setBackgroundColor(&quot;uiColorRSettingsThemeConsole&quot;,0,0,0,255);
+	uiColorRSettingsThemeConsole:setWrap(30)
+	uiColorRSettingsThemeConsole:setFontSize(12)
+
+	uiColorGSettingsThemeConsole = Geyser.MiniConsole:new({
+	  name = &quot;uiColorGSettingsThemeConsole&quot;,
+	  x=225, y=172,
+	  width=50, height=20,
+	}, settingsWindow)
+   setBackgroundColor(&quot;uiColorGSettingsThemeConsole&quot;,0,0,0,255);
+	uiColorGSettingsThemeConsole:setWrap(30)
+	uiColorGSettingsThemeConsole:setFontSize(12)
+
+	uiColorBSettingsThemeConsole = Geyser.MiniConsole:new({
+	  name = &quot;uiColorBSettingsThemeConsole&quot;,
+	  x=285, y=172,
+	  width=50, height=20,
+	}, settingsWindow)
+   setBackgroundColor(&quot;uiColorBSettingsThemeConsole&quot;,0,0,0,255);
+	uiColorBSettingsThemeConsole:setWrap(30)
+	uiColorBSettingsThemeConsole:setFontSize(12)
+
+	clearWindow(&quot;uiColorSettingsThemeConsole&quot;)
+	clearWindow(&quot;uiColorRSettingsThemeConsole&quot;)
+	clearWindow(&quot;uiColorGSettingsThemeConsole&quot;)
+	clearWindow(&quot;uiColorBSettingsThemeConsole&quot;)
+
+	cecho(&quot;uiColorSettingsThemeConsole&quot;, &quot;&lt;grey&gt;Border Color&quot;)
+	cecho(&quot;uiColorRSettingsThemeConsole&quot;, &quot;:&lt;red&gt; &quot;..BGColorR..&quot; &quot;)
+	cecho(&quot;uiColorGSettingsThemeConsole&quot;, &quot;:&lt;green&gt; &quot;..BGColorG..&quot; &quot;)
+	cecho(&quot;uiColorBSettingsThemeConsole&quot;, &quot;:&lt;blue&gt; &quot;..BGColorB..&quot; &quot;)
+
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+
+	layout1BTN = Geyser.Label:new({
+	  name = &quot;layout1BTN&quot;,
+	  x=25, y=225,
+	  width=45, height=45,
+	}, settingsWindow)
+	setBackgroundImage(&quot;layout1BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/greenCheck.png&quot;);
+
+	layout2BTN = Geyser.Label:new({
+	  name = &quot;layout2BTN&quot;,
+	  x=25, y=270,
+	  width=45, height=45,
+	}, settingsWindow)
+	setBackgroundImage(&quot;layout2BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/emptyCheck.png&quot;);
+
+	layout3BTN = Geyser.Label:new({
+	  name = &quot;layout3BTN&quot;,
+	  x=200, y=225,
+	  width=45, height=45,
+	}, settingsWindow)
+	setBackgroundImage(&quot;layout3BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/emptyCheck.png&quot;);
+
+	layout4BTN = Geyser.Label:new({
+	  name = &quot;layout4BTN&quot;,
+	  x=200, y=270,
+	  width=45, height=45,
+	}, settingsWindow)
+	setBackgroundImage(&quot;layout4BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/emptyCheck.png&quot;);
+
+--
+
+	layout1Console = Geyser.MiniConsole:new({
+	  name = &quot;layout1Console&quot;,
+	  x=75, y=240,
+	  width=125, height=20,
+	}, settingsWindow)
+   setBackgroundColor(&quot;layout1Console&quot;,0,0,0,255);
+	layout1Console:setWrap(30)
+	layout1Console:setFontSize(10)
+
+	layout2Console = Geyser.MiniConsole:new({
+	  name = &quot;layout2Console&quot;,
+	  x=75, y=285,
+	  width=125, height=20,
+	}, settingsWindow)
+   setBackgroundColor(&quot;layout2Console&quot;,0,0,0,255);
+	layout2Console:setWrap(30)
+	layout2Console:setFontSize(10)
+
+	layout3Console = Geyser.MiniConsole:new({
+	  name = &quot;layout3Console&quot;,
+	  x=250, y=240,
+	  width=125, height=20,
+	}, settingsWindow)
+   setBackgroundColor(&quot;layout3Console&quot;,0,0,0,255);
+	layout3Console:setWrap(30)
+	layout3Console:setFontSize(10)
+
+	layout4Console = Geyser.MiniConsole:new({
+	  name = &quot;layout4Console&quot;,
+	  x=250, y=285,
+	  width=125, height=20,
+	}, settingsWindow)
+   setBackgroundColor(&quot;layout4Console&quot;,0,0,0,255);
+	layout4Console:setWrap(30)
+	layout4Console:setFontSize(10)
+
+	clearWindow(&quot;layout1Console&quot;)
+	clearWindow(&quot;layout2Console&quot;)
+	clearWindow(&quot;layout3Console&quot;)
+	clearWindow(&quot;layout4Console&quot;)
+
+	cecho(&quot;layout1Console&quot;, &quot;&lt;green&gt;Default Layout&quot;)
+	cecho(&quot;layout2Console&quot;, &quot;&lt;grey&gt;Layout 2&quot;)
+	cecho(&quot;layout3Console&quot;, &quot;&lt;grey&gt;Layout 3&quot;)
+	cecho(&quot;layout4Console&quot;, &quot;&lt;grey&gt;Layout 4&quot;)
+
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+
+	prevPageBTN = Geyser.Label:new({
+	  name = &quot;prevPageBTN&quot;,
+	  x=120, y=330,
+	  width=20, height=20,
+	}, settingsWindow)
+	setBackgroundImage(&quot;prevPageBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/leftBTN.png&quot;);
+
+	nextPageBTN = Geyser.Label:new({
+	  name = &quot;nextPageBTN&quot;,
+	  x=250, y=330,
+	  width=20, height=20,
+	}, settingsWindow)
+	setBackgroundImage(&quot;nextPageBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/rightBTN.png&quot;);
+
+--
+
+	pageConsole = Geyser.MiniConsole:new({
+	  name = &quot;pageConsole&quot;,
+	  x=145, y=334,
+	  width=100, height=15,
+	}, settingsWindow)
+   setBackgroundColor(&quot;pageConsole&quot;,0,0,0,255);
+	pageConsole:setWrap(30)
+	pageConsole:setFontSize(10)
+
+	prevPageBTN:hide()
+
+	clearWindow(&quot;pageConsole&quot;)
+	cecho(&quot;pageConsole&quot;, &quot;&lt;grey&gt; Page: &lt;green&gt;&quot;..settingsPage)
+	
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+
+	setLabelClickCallback( &quot;settingscloseBTN&quot;, &quot;settingsCloseButtonCallback()&quot; )
+
+	setLabelClickCallback( &quot;modify_10BTN&quot;, &quot;fSize10BTN()&quot; )
+	setLabelClickCallback( &quot;modify_100BTN&quot;, &quot;fSize100BTN()&quot; ) 
+
+	setLabelClickCallback( &quot;topBorderLeftBTN&quot;, &quot;ftopBorderLeftBTN()&quot; )
+	setLabelClickCallback( &quot;topBorderRightBTN&quot;, &quot;ftopBorderRightBTN()&quot; )
+	setLabelClickCallback( &quot;leftBorderLeftBTN&quot;, &quot;fleftBorderLeftBTN()&quot; )
+	setLabelClickCallback( &quot;leftBorderRightBTN&quot;, &quot;fleftBorderRightBTN()&quot; )
+	setLabelClickCallback( &quot;rightBorderLeftBTN&quot;, &quot;frightBorderLeftBTN()&quot; )
+	setLabelClickCallback( &quot;rightBorderRightBTN&quot;, &quot;frightBorderRightBTN()&quot; )
+	setLabelClickCallback( &quot;bottomBorderLeftBTN&quot;, &quot;fbottomBorderLeftBTN()&quot; )
+	setLabelClickCallback( &quot;bottomBorderRightBTN&quot;, &quot;fbottomBorderRightBTN()&quot; ) 
+
+	setLabelClickCallback( &quot;uiColorRSettingsUpBTN&quot;, &quot;uiColorRSettingsUpButtonCallback()&quot; )
+	setLabelClickCallback( &quot;uiColorRSettingsDownBTN&quot;, &quot;uiColorRSettingsDownButtonCallback()&quot; )
+	setLabelClickCallback( &quot;uiColorGSettingsUpBTN&quot;, &quot;uiColorGSettingsUpButtonCallback()&quot; )
+	setLabelClickCallback( &quot;uiColorGSettingsDownBTN&quot;, &quot;uiColorGSettingsDownButtonCallback()&quot; )
+	setLabelClickCallback( &quot;uiColorBSettingsUpBTN&quot;, &quot;uiColorBSettingsUpButtonCallback()&quot; )
+	setLabelClickCallback( &quot;uiColorBSettingsDownBTN&quot;, &quot;uiColorBSettingsDownButtonCallback()&quot; )
+
+	setLabelClickCallback( &quot;layout1BTN&quot;, &quot;layout1BTN_Callback&quot; )
+	setLabelClickCallback( &quot;layout2BTN&quot;, &quot;layout2BTN_Callback&quot; )
+	setLabelClickCallback( &quot;layout3BTN&quot;, &quot;layout3BTN_Callback&quot; )
+	setLabelClickCallback( &quot;layout4BTN&quot;, &quot;layout4BTN_Callback&quot; )
+
+	setLabelClickCallback( &quot;prevPageBTN&quot;, &quot;prevPageBTN_Callback&quot; )
+	setLabelClickCallback( &quot;nextPageBTN&quot;, &quot;nextPageBTN_Callback&quot; )
+
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+
+	settingsWindow:hide()
+
+end</script>
+                    <eventHandlerList/>
+                </Script>
+                <ScriptGroup isActive="yes" isFolder="yes">
+                    <name>Button Callbacks</name>
+                    <packageName></packageName>
+                    <script>-------------------------------------------------
+--         Put your Lua functions here.        --
+--                                             --
+-- Note that you can also use external Scripts --
+-------------------------------------------------
+</script>
+                    <eventHandlerList/>
+                    <Script isActive="yes" isFolder="no">
+                        <name>Settings Close Button</name>
+                        <packageName></packageName>
+                        <script>function settingsCloseButtonCallback() 
+
+	Movement_Modifier = 1
+	setBackgroundImage(&quot;modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10Off.png&quot;)
+	setBackgroundImage(&quot;modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100Off.png&quot;)
+	modify_10BTNPushed = 0
+	modify_100BTNPushed = 0
+
+	-------------------------------------------
+	-- Hide All Settings Windows
+	-------------------------------------------
+
+	settingsWindow:hide()
+	saveZulahGUIVariables()
+
+end</script>
+                        <eventHandlerList/>
+                    </Script>
+                    <Script isActive="yes" isFolder="no">
+                        <name>Settings Open  Button</name>
+                        <packageName></packageName>
+                        <script>function settingsBTNfunction()
+	-----------------------------
+	-- Check Mudlet Screen Size 
+	----------------------------- 	
+	selectedPluginCount = 1
+
+	WindowWidth=0;
+	WindowHeight=0;
+	WindowWidth, WindowHeight = getMainWindowSize();
+	settingsWindow:move(WindowWidth/2-200, WindowHeight/2-212)
+
+	updateBorderSettingsWindow()
+
+	settingsWindow:show()
+	allSettingsWindow:hide()
+
+	Movement_Modifier = 1
+	setBackgroundImage(&quot;modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10Off.png&quot;)
+	setBackgroundImage(&quot;modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100Off.png&quot;)
+	modify_10BTNPushed = 0
+	modify_100BTNPushed = 0
+
+	scanDir()
+	pluginPage()
+
+	toggleContainer_page2:hide()
+	toggleContainer_page3:hide()
+	toggleContainer_page4:hide()
+	toggleContainer_page5:hide()
+	toggleContainer_page6:hide()
+
+	if settingsPage == 2 then
+		toggleContainer_page2:show()
+	end
+	if settingsPage == 3 then
+		toggleContainer_page3:show()
+	end
+	if settingsPage == 4 then
+		toggleContainer_page4:show()
+	end
+	if settingsPage == 5 then
+		toggleContainer_page5:show()
+	end
+	if settingsPage == 6 then
+		toggleContainer_page6:show()
+	end
+end
+</script>
+                        <eventHandlerList/>
+                    </Script>
+                    <Script isActive="yes" isFolder="no">
+                        <name>10 / 100 Buttons</name>
+                        <packageName></packageName>
+                        <script>
+function fSize10BTN()
+	if modify_10BTNPushed == 0 then
+		Movement_Modifier = 10
+		setBackgroundImage(&quot;modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10On.png&quot;);
+		setBackgroundImage(&quot;modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100Off.png&quot;);		
+		modify_10BTNPushed = 1
+		modify_100BTNPushed = 0
+	else
+		Movement_Modifier = 1
+		setBackgroundImage(&quot;modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10Off.png&quot;);	
+		modify_10BTNPushed = 0
+		modify_100BTNPushed = 0
+	end
+end
+
+function fSize100BTN()
+	if modify_100BTNPushed == 0 then
+		Movement_Modifier = 100
+		setBackgroundImage(&quot;modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100On.png&quot;);	
+		setBackgroundImage(&quot;modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10Off.png&quot;);
+		modify_10BTNPushed = 0
+		modify_100BTNPushed = 1
+	else
+		Movement_Modifier = 1
+		setBackgroundImage(&quot;modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100Off.png&quot;);	
+		modify_10BTNPushed = 0
+		modify_100BTNPushed = 0
+	end
+end
+</script>
+                        <eventHandlerList/>
+                    </Script>
+                    <Script isActive="yes" isFolder="no">
+                        <name>Border Size Buttons</name>
+                        <packageName></packageName>
+                        <script>function ftopBorderLeftBTN()
+	borderTop = borderTop - Movement_Modifier
+	setBorderTop(borderTop)
+	updateBorderSettingsWindow()
+end
+
+function ftopBorderRightBTN()
+	borderTop = borderTop + Movement_Modifier
+	setBorderTop(borderTop)
+	updateBorderSettingsWindow()
+end
+
+--
+
+function fleftBorderLeftBTN()
+	borderLeft = borderLeft - Movement_Modifier
+	setBorderLeft(borderLeft)
+	updateBorderSettingsWindow()
+end
+
+function fleftBorderRightBTN()
+	borderLeft = borderLeft + Movement_Modifier
+	setBorderLeft(borderLeft)
+	updateBorderSettingsWindow()
+end
+
+--
+
+function frightBorderLeftBTN()
+	borderRight = borderRight - Movement_Modifier
+	setBorderRight(borderRight)
+	updateBorderSettingsWindow()
+end
+
+function frightBorderRightBTN()
+	borderRight = borderRight + Movement_Modifier
+	setBorderRight(borderRight)
+	updateBorderSettingsWindow()
+end
+
+--
+
+function fbottomBorderLeftBTN()
+	borderBottom = borderBottom - Movement_Modifier
+	setBorderBottom(borderBottom)
+	updateBorderSettingsWindow()
+end
+
+function fbottomBorderRightBTN()
+	borderBottom = borderBottom + Movement_Modifier
+	setBorderBottom(borderBottom)
+	updateBorderSettingsWindow()
+end</script>
+                        <eventHandlerList/>
+                    </Script>
+                    <Script isActive="yes" isFolder="no">
+                        <name>Layout Buttons</name>
+                        <packageName></packageName>
+                        <script>
+function layout1BTN_Callback()
+	clearLayoutBTN()
+	setBackgroundImage(&quot;layout1BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/greenCheck.png&quot;);
+	zlayout = 1
+	savedLayoutName = &quot;Default&quot;
+	loadZulahGUIVariables()
+	updateLayout()
+end
+
+function layout2BTN_Callback()
+	clearLayoutBTN()
+	setBackgroundImage(&quot;layout2BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/greenCheck.png&quot;);
+	zlayout = 2
+	savedLayoutName = &quot;Layout 2&quot;
+	loadZulahGUIVariables()
+	updateLayout()
+end
+
+function layout3BTN_Callback()
+	clearLayoutBTN()
+	setBackgroundImage(&quot;layout3BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/greenCheck.png&quot;);
+	zlayout = 3
+	savedLayoutName = &quot;Layout 3&quot;
+	loadZulahGUIVariables()
+	updateLayout()
+end
+
+function layout4BTN_Callback()
+	clearLayoutBTN()
+	setBackgroundImage(&quot;layout4BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/greenCheck.png&quot;);
+	zlayout = 4
+	savedLayoutName = &quot;Layout 4&quot;
+	loadZulahGUIVariables()
+	updateLayout()
+end
+
+function clearLayoutBTN()
+	setBackgroundImage(&quot;layout1BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/emptyCheck.png&quot;);
+	setBackgroundImage(&quot;layout2BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/emptyCheck.png&quot;);
+	setBackgroundImage(&quot;layout3BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/emptyCheck.png&quot;);
+	setBackgroundImage(&quot;layout4BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/emptyCheck.png&quot;);
+end</script>
+                        <eventHandlerList/>
+                    </Script>
+                    <Script isActive="yes" isFolder="no">
+                        <name>Border Color Buttons</name>
+                        <packageName></packageName>
+                        <script>
+function uiColorRSettingsUpButtonCallback()
+	BGColorR = BGColorR + Movement_Modifier
+	clearWindow(&quot;uiColorSettingsThemeConsole&quot;)
+	clearWindow(&quot;uiColorRSettingsThemeConsole&quot;)
+	clearWindow(&quot;uiColorGSettingsThemeConsole&quot;)
+	clearWindow(&quot;uiColorBSettingsThemeConsole&quot;)
+
+	cecho(&quot;uiColorSettingsThemeConsole&quot;, &quot;&lt;grey&gt;Border Color:&quot;)
+	cecho(&quot;uiColorRSettingsThemeConsole&quot;, &quot;:&lt;red&gt; &quot;..BGColorR)
+	cecho(&quot;uiColorGSettingsThemeConsole&quot;, &quot;:&lt;green&gt; &quot;..BGColorG)
+	cecho(&quot;uiColorBSettingsThemeConsole&quot;, &quot;:&lt;blue&gt; &quot;..BGColorB)
+	setBorderColor(BGColorR, BGColorG, BGColorB)
+end
+
+function uiColorRSettingsDownButtonCallback()
+	BGColorR = BGColorR - Movement_Modifier
+	clearWindow(&quot;uiColorSettingsThemeConsole&quot;)
+	clearWindow(&quot;uiColorRSettingsThemeConsole&quot;)
+	clearWindow(&quot;uiColorGSettingsThemeConsole&quot;)
+	clearWindow(&quot;uiColorBSettingsThemeConsole&quot;)
+
+	cecho(&quot;uiColorSettingsThemeConsole&quot;, &quot;&lt;grey&gt;Border Color:&quot;)
+	cecho(&quot;uiColorRSettingsThemeConsole&quot;, &quot;:&lt;red&gt; &quot;..BGColorR)
+	cecho(&quot;uiColorGSettingsThemeConsole&quot;, &quot;:&lt;green&gt; &quot;..BGColorG)
+	cecho(&quot;uiColorBSettingsThemeConsole&quot;, &quot;:&lt;blue&gt; &quot;..BGColorB)
+	setBorderColor(BGColorR, BGColorG, BGColorB)
+end
+
+function uiColorGSettingsUpButtonCallback()
+	BGColorG = BGColorG + Movement_Modifier
+	clearWindow(&quot;uiColorSettingsThemeConsole&quot;)
+	clearWindow(&quot;uiColorRSettingsThemeConsole&quot;)
+	clearWindow(&quot;uiColorGSettingsThemeConsole&quot;)
+	clearWindow(&quot;uiColorBSettingsThemeConsole&quot;)
+
+	cecho(&quot;uiColorSettingsThemeConsole&quot;, &quot;&lt;grey&gt;Border Color:&quot;)
+	cecho(&quot;uiColorRSettingsThemeConsole&quot;, &quot;:&lt;red&gt; &quot;..BGColorR)
+	cecho(&quot;uiColorGSettingsThemeConsole&quot;, &quot;:&lt;green&gt; &quot;..BGColorG)
+	cecho(&quot;uiColorBSettingsThemeConsole&quot;, &quot;:&lt;blue&gt; &quot;..BGColorB)
+	setBorderColor(BGColorR, BGColorG, BGColorB)
+end
+
+function uiColorGSettingsDownButtonCallback()
+	BGColorG = BGColorG - Movement_Modifier
+	clearWindow(&quot;uiColorSettingsThemeConsole&quot;)
+	clearWindow(&quot;uiColorRSettingsThemeConsole&quot;)
+	clearWindow(&quot;uiColorGSettingsThemeConsole&quot;)
+	clearWindow(&quot;uiColorBSettingsThemeConsole&quot;)
+
+	cecho(&quot;uiColorSettingsThemeConsole&quot;, &quot;&lt;grey&gt;Border Color:&quot;)
+	cecho(&quot;uiColorRSettingsThemeConsole&quot;, &quot;:&lt;red&gt; &quot;..BGColorR)
+	cecho(&quot;uiColorGSettingsThemeConsole&quot;, &quot;:&lt;green&gt; &quot;..BGColorG)
+	cecho(&quot;uiColorBSettingsThemeConsole&quot;, &quot;:&lt;blue&gt; &quot;..BGColorB)
+	setBorderColor(BGColorR, BGColorG, BGColorB)
+end
+
+function uiColorBSettingsUpButtonCallback()
+	BGColorB = BGColorB + Movement_Modifier
+	clearWindow(&quot;uiColorSettingsThemeConsole&quot;)
+	clearWindow(&quot;uiColorRSettingsThemeConsole&quot;)
+	clearWindow(&quot;uiColorGSettingsThemeConsole&quot;)
+	clearWindow(&quot;uiColorBSettingsThemeConsole&quot;)
+
+	cecho(&quot;uiColorSettingsThemeConsole&quot;, &quot;&lt;grey&gt;Border Color:&quot;)
+	cecho(&quot;uiColorRSettingsThemeConsole&quot;, &quot;:&lt;red&gt; &quot;..BGColorR)
+	cecho(&quot;uiColorGSettingsThemeConsole&quot;, &quot;:&lt;green&gt; &quot;..BGColorG)
+	cecho(&quot;uiColorBSettingsThemeConsole&quot;, &quot;:&lt;blue&gt; &quot;..BGColorB)
+	setBorderColor(BGColorR, BGColorG, BGColorB)
+end
+
+function uiColorBSettingsDownButtonCallback()
+	BGColorB = BGColorB - Movement_Modifier
+	clearWindow(&quot;uiColorSettingsThemeConsole&quot;)
+	clearWindow(&quot;uiColorRSettingsThemeConsole&quot;)
+	clearWindow(&quot;uiColorGSettingsThemeConsole&quot;)
+	clearWindow(&quot;uiColorBSettingsThemeConsole&quot;)
+
+	cecho(&quot;uiColorSettingsThemeConsole&quot;, &quot;&lt;grey&gt;Border Color:&quot;)
+	cecho(&quot;uiColorRSettingsThemeConsole&quot;, &quot;:&lt;red&gt; &quot;..BGColorR)
+	cecho(&quot;uiColorGSettingsThemeConsole&quot;, &quot;:&lt;green&gt; &quot;..BGColorG)
+	cecho(&quot;uiColorBSettingsThemeConsole&quot;, &quot;:&lt;blue&gt; &quot;..BGColorB)
+	setBorderColor(BGColorR, BGColorG, BGColorB)
+end</script>
+                        <eventHandlerList/>
+                    </Script>
+                    <Script isActive="yes" isFolder="no">
+                        <name>Page Buttons</name>
+                        <packageName></packageName>
+                        <script>
+function prevPageBTN_Callback()
+	if settingsPage == 2 then
+		setBackgroundImage(&quot;settingsBG&quot;, getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/settingsMain.png&quot;);
+		showSettingsMain()
+		prevPageBTN:hide()
+		toggleContainer_page2:hide()
+
+	elseif settingsPage == 3 then
+		toggleContainer_page2:show()
+		toggleContainer_page3:hide()
+
+	elseif settingsPage == 4 then
+		toggleContainer_page2:hide()
+		toggleContainer_page3:show()
+
+	elseif settingsPage == 5 then
+		toggleContainer_page3:hide()
+		toggleContainer_page4:show()
+
+	elseif settingsPage == 6 then
+		toggleContainer_page4:hide()
+		toggleContainer_page5:show()
+		nextPageBTN:show()
+	end
+
+	settingsPage = settingsPage - 1
+	clearWindow(&quot;pageConsole&quot;)
+	cecho(&quot;pageConsole&quot;, &quot;&lt;grey&gt; Page: &lt;green&gt;&quot;..settingsPage)
+end
+
+function nextPageBTN_Callback()
+	if settingsPage == 1 then
+		toggleContainer_page2:show()
+	end		
+
+	if settingsPage == 2 then
+		toggleContainer_page3:show()
+		toggleContainer_page2:hide()
+	end
+
+	if settingsPage == 3 then
+		toggleContainer_page4:show()
+		toggleContainer_page3:hide()
+	end
+
+	if settingsPage == 4 then
+		toggleContainer_page5:show()
+		toggleContainer_page4:hide()
+	end
+
+	if settingsPage == 5 then
+		toggleContainer_page6:show()
+		toggleContainer_page5:hide()
+		nextPageBTN:hide()
+	end
+
+	setBackgroundImage(&quot;settingsBG&quot;, getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/settingsPage.png&quot;);
+	hideSettingsMain()
+	prevPageBTN:show()
+	settingsPage = settingsPage + 1
+	clearWindow(&quot;pageConsole&quot;)
+	cecho(&quot;pageConsole&quot;, &quot;&lt;grey&gt; Page: &lt;green&gt;&quot;..settingsPage)
+end
+
+function showSettingsMain()
+	modify_10BTN:show()
+	modify_100BTN:show()
+	borderNameConsole:show()
+	borderConsole:show()
+	topBorderLeftBTN:show()
+	topBorderRightBTN:show()
+	leftBorderLeftBTN:show()
+	leftBorderRightBTN:show()
+	rightBorderLeftBTN:show()
+	rightBorderRightBTN:show()
+	bottomBorderLeftBTN:show()
+	bottomBorderRightBTN:show()
+	uiColorRSettingsUpBTN:show()
+	uiColorRSettingsDownBTN:show()
+	uiColorGSettingsUpBTN:show()
+	uiColorGSettingsDownBTN:show()
+	uiColorBSettingsUpBTN:show()
+	uiColorBSettingsDownBTN:show()
+	uiColorSettingsThemeConsole:show()
+	uiColorRSettingsThemeConsole:show()
+	uiColorGSettingsThemeConsole:show()
+	uiColorBSettingsThemeConsole:show()
+	layout1BTN:show()
+	layout2BTN:show()
+	layout3BTN:show()
+	layout4BTN:show()
+	layout1Console:show()
+	layout2Console:show()
+	layout3Console:show()
+	layout4Console:show()
+end
+
+function hideSettingsMain()
+	modify_10BTN:hide()
+	modify_100BTN:hide()
+	borderNameConsole:hide()
+	borderConsole:hide()
+	topBorderLeftBTN:hide()
+	topBorderRightBTN:hide()
+	leftBorderLeftBTN:hide()
+	leftBorderRightBTN:hide()
+	rightBorderLeftBTN:hide()
+	rightBorderRightBTN:hide()
+	bottomBorderLeftBTN:hide()
+	bottomBorderRightBTN:hide()
+	uiColorRSettingsUpBTN:hide()
+	uiColorRSettingsDownBTN:hide()
+	uiColorGSettingsUpBTN:hide()
+	uiColorGSettingsDownBTN:hide()
+	uiColorBSettingsUpBTN:hide()
+	uiColorBSettingsDownBTN:hide()
+	uiColorSettingsThemeConsole:hide()
+	uiColorRSettingsThemeConsole:hide()
+	uiColorGSettingsThemeConsole:hide()
+	uiColorBSettingsThemeConsole:hide()
+	layout1BTN:hide()
+	layout2BTN:hide()
+	layout3BTN:hide()
+	layout4BTN:hide()
+	layout1Console:hide()
+	layout2Console:hide()
+	layout3Console:hide()
+	layout4Console:hide()
+end</script>
+                        <eventHandlerList/>
+                    </Script>
+                </ScriptGroup>
+                <ScriptGroup isActive="yes" isFolder="yes">
+                    <name>Consoles</name>
+                    <packageName></packageName>
+                    <script>-------------------------------------------------
+--         Put your Lua functions here.        --
+--                                             --
+-- Note that you can also use external Scripts --
+-------------------------------------------------
+</script>
+                    <eventHandlerList/>
+                    <Script isActive="yes" isFolder="no">
+                        <name>Border Console</name>
+                        <packageName></packageName>
+                        <script>function updateBorderSettingsWindow()
+	clearWindow(&quot;borderConsole&quot;)
+	cecho(&quot;borderConsole&quot;, &quot;&lt;green&gt;&quot;..borderTop..&quot;\n&quot;)
+	cecho(&quot;borderConsole&quot;, &quot;&lt;green&gt;&quot;..borderLeft..&quot;\n&quot;)
+	cecho(&quot;borderConsole&quot;, &quot;&lt;green&gt;&quot;..borderRight..&quot;\n&quot;)
+	cecho(&quot;borderConsole&quot;, &quot;&lt;green&gt;&quot;..borderBottom..&quot;\n&quot;)
+end</script>
+                        <eventHandlerList/>
+                    </Script>
+                    <Script isActive="yes" isFolder="no">
+                        <name>Color Console</name>
+                        <packageName></packageName>
+                        <script>function updateColorConsole()
+	clearWindow(&quot;uiColorSettingsThemeConsole&quot;)
+	clearWindow(&quot;uiColorRSettingsThemeConsole&quot;)
+	clearWindow(&quot;uiColorGSettingsThemeConsole&quot;)
+	clearWindow(&quot;uiColorBSettingsThemeConsole&quot;)
+
+	cecho(&quot;uiColorSettingsThemeConsole&quot;, &quot;&lt;grey&gt;Border Color&quot;)
+	cecho(&quot;uiColorRSettingsThemeConsole&quot;, &quot;:&lt;red&gt; &quot;..BGColorR..&quot; &quot;)
+	cecho(&quot;uiColorGSettingsThemeConsole&quot;, &quot;:&lt;green&gt; &quot;..BGColorG..&quot; &quot;)
+	cecho(&quot;uiColorBSettingsThemeConsole&quot;, &quot;:&lt;blue&gt; &quot;..BGColorB..&quot; &quot;)
+end</script>
+                        <eventHandlerList/>
+                    </Script>
+                </ScriptGroup>
+                <Script isActive="yes" isFolder="no">
+                    <name>Main Settings Button</name>
+                    <packageName></packageName>
+                    <script>function mainSettingsGear()
+
+	------------------------------------------------------
+	-- Create Settings Gear Button
+	------------------------------------------------------
+
+	settingsBTN = Geyser.Label:new({
+	  name = &quot;settingsBTN&quot;,
+	  x=10, y=0,
+	  width=40, height=30,
+	})
+	setBackgroundColor(&quot;settingsBTN&quot;,0,0,0,0)
+	setBackgroundImage(&quot;settingsBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/GearIcon.png&quot;)
+
+
+	setLabelClickCallback( &quot;settingsBTN&quot;, &quot;settingsBTNfunction()&quot; )
+
+end</script>
+                    <eventHandlerList/>
+                </Script>
+            </ScriptGroup>
+            <ScriptGroup isActive="yes" isFolder="yes">
+                <name>Layouts</name>
+                <packageName></packageName>
+                <script>-------------------------------------------------
+--         Put your Lua functions here.        --
+--                                             --
+-- Note that you can also use external Scripts --
+-------------------------------------------------
+</script>
+                <eventHandlerList/>
+                <Script isActive="yes" isFolder="no">
+                    <name>Save Layout 1</name>
+                    <packageName></packageName>
+                    <script>function saveZulahGUIVariables()
+	fillZulahGUI2_Table()
+	savePluginLayouts()
+	table.save(getMudletHomeDir()..&quot;/ZulahGUI2/Layouts/layout_&quot;..zlayout..&quot;.lua&quot;, ZulahGUI2_VarTable)
+end
+
+function fillZulahGUI2_Table()
+	------------------------------------
+	ZulahGUI2_VarTable = {
+		savedLayoutName,
+		---------------------------------
+		-- Borders (4)
+		---------------------------------
+		borderLeft,
+		borderRight,
+		borderTop,
+		borderBottom,
+		---------------------------------
+		--UI Colors (3)
+		---------------------------------
+		BGColorR,
+		BGColorG,
+		BGColorB,
+		---------------------------------
+		}
+end
+
+function savePluginLayouts()
+	for i=1, table.size(loadedPluginsTables), 1 do
+		table.save(getMudletHomeDir()..loadedPluginsTables[i].save_location..zlayout..&quot;.lua&quot;, _G[loadedPluginsTables[i].tableName])
+	end
+end</script>
+                    <eventHandlerList/>
+                </Script>
+                <Script isActive="yes" isFolder="no">
+                    <name>Load Layout 1</name>
+                    <packageName></packageName>
+                    <script>------------------------------------------------------
+-- Load Saved Variables
+------------------------------------------------------
+
+function loadZulahGUIVariables()
+	table.load(getMudletHomeDir()..&quot;/ZulahGUI2/Layouts/layout_&quot;..zlayout..&quot;.lua&quot;, ZulahGUI2_VarTable)
+	callZulahGUI2_Table()
+	loadPluginLayouts()
+end
+
+function callZulahGUI2_Table()
+	savedLayoutName = ZulahGUI2_VarTable[1]
+	----------------------------------------
+	-- Borders (4)
+	----------------------------------------
+	borderLeft = ZulahGUI2_VarTable[2]
+	borderRight = ZulahGUI2_VarTable[3]
+	borderTop = ZulahGUI2_VarTable[4]
+	borderBottom = ZulahGUI2_VarTable[5]
+	---------------------------------
+	--UI Colors (3)
+	---------------------------------
+	BGColorR = ZulahGUI2_VarTable[6]
+	BGColorG = ZulahGUI2_VarTable[7]
+	BGColorB = ZulahGUI2_VarTable[8]
+	---------------------------------
+end
+
+function loadPluginLayouts()
+	for i=1, table.size(loadedPluginsTables), 1 do
+		table.load(getMudletHomeDir()..loadedPluginsTables[i].save_location..zlayout..&quot;.lua&quot;, _G[loadedPluginsTables[i].tableName])
+	end
+end</script>
+                    <eventHandlerList/>
+                </Script>
+                <Script isActive="yes" isFolder="no">
+                    <name>Update Layout</name>
+                    <packageName></packageName>
+                    <script>function updateLayout()
+	---------------------------------
+	-- Set Borders and Color them
+	---------------------------------
+
+	setBorderLeft(borderLeft)
+	setBorderBottom(borderBottom)
+	setBorderTop(borderTop)
+	setBorderRight(borderRight)
+	updateBorderSettingsWindow()
+
+	setBorderColor(BGColorR, BGColorG, BGColorB)
+	updateColorConsole()
+
+	---------------------------------
+	-- Check for ZulahGUI Plugins
+	---------------------------------
+
+	scanDir()
+	pluginPage()
+
+	---------------------------------
+end</script>
+                    <eventHandlerList/>
+                </Script>
+            </ScriptGroup>
+            <ScriptGroup isActive="yes" isFolder="yes">
+                <name>Plugin Loader</name>
+                <packageName></packageName>
+                <script>-------------------------------------------------
+--         Put your Lua functions here.        --
+--                                             --
+-- Note that you can also use external Scripts --
+-------------------------------------------------
+</script>
+                <eventHandlerList/>
+                <Script isActive="yes" isFolder="no">
+                    <name>Scan Directory</name>
+                    <packageName></packageName>
+                    <script>function scanDir()
+	loadedPluginsTables = {}
+
+	local lfs = require( &quot;lfs&quot;)
+	local doc_path = (getMudletHomeDir())
+	local checkDir = nil
+	local tempPluginHolder = {}
+
+	for file in lfs.dir( doc_path ) do
+		if string.starts(file, &quot;ZulahGUI_&quot;) then			
+		checkDir = (getMudletHomeDir()..&quot;/&quot;..file)
+			for file in lfs.dir(checkDir) do
+			if string.starts(file, &quot;ZulahGUI_&quot;) then	
+				tempPluginHolder = {}
+				if zlayout == 1 then
+					if string.ends(file, &quot;1.lua&quot;) then					
+						table.load(checkDir..&quot;/&quot;..file, tempPluginHolder)	
+						table.load(getMudletHomeDir()..tempPluginHolder.save_location..zlayout..&quot;.lua&quot;, _G[tempPluginHolder.tableName])		
+						table.insert(loadedPluginsTables, tempPluginHolder)			
+						_G[tempPluginHolder.setup]()				
+					end
+				end
+				if zlayout == 2 then
+					if string.ends(file, &quot;2.lua&quot;) then		
+						table.load(checkDir..&quot;/&quot;..file, tempPluginHolder)	
+						table.load(getMudletHomeDir()..tempPluginHolder.save_location..zlayout..&quot;.lua&quot;, _G[tempPluginHolder.tableName])
+						table.insert(loadedPluginsTables, tempPluginHolder)
+						_G[tempPluginHolder.setup]()
+					end
+				end
+
+				if zlayout == 3 then
+					if string.ends(file, &quot;3.lua&quot;) then		
+						table.load(checkDir..&quot;/&quot;..file, tempPluginHolder)	
+						table.load(getMudletHomeDir()..tempPluginHolder.save_location..zlayout..&quot;.lua&quot;, _G[tempPluginHolder.tableName])
+						table.insert(loadedPluginsTables, tempPluginHolder)
+						_G[tempPluginHolder.setup]()
+					end
+				end
+
+				if zlayout == 4 then
+					if string.ends(file, &quot;4.lua&quot;) then		
+						table.load(checkDir..&quot;/&quot;..file, tempPluginHolder)	
+						table.load(getMudletHomeDir()..tempPluginHolder.save_location..zlayout..&quot;.lua&quot;, _G[tempPluginHolder.tableName])
+						table.insert(loadedPluginsTables, tempPluginHolder)
+						_G[tempPluginHolder.setup]()
+					end
+				end
+			end
+		end
+	end
+	end
+end</script>
+                    <eventHandlerList/>
+                </Script>
+                <Script isActive="yes" isFolder="no">
+                    <name>Create Plugin Page</name>
+                    <packageName></packageName>
+                    <script>function pluginPage()
+
+	toggleContainer_page2 = Geyser.Container:new({
+		name = &quot;toggleContainer_page2&quot;,
+		x=0, y=0,
+		width=0, height=0,
+	}, settingsWindow)
+
+	toggleContainer_page3 = Geyser.Container:new({
+		name = &quot;toggleContainer_page3&quot;,
+		x=0, y=0,
+		width=0, height=0,
+	}, settingsWindow)
+
+	toggleContainer_page4 = Geyser.Container:new({
+		name = &quot;toggleContainer_page4&quot;,
+		x=0, y=0,
+		width=0, height=0,
+	}, settingsWindow)
+
+	toggleContainer_page5 = Geyser.Container:new({
+		name = &quot;toggleContainer_page5&quot;,
+		x=0, y=0,
+		width=0, height=0,
+	}, settingsWindow)
+
+	toggleContainer_page6 = Geyser.Container:new({
+		name = &quot;toggleContainer_page6&quot;,
+		x=0, y=0,
+		width=0, height=0,
+	}, settingsWindow)
+
+	useTogglePage = toggleContainer_page2
+	for i=1, table.size(loadedPluginsTables), 1 do
+		
+		if i == 11 then
+			settingSwitch_X = 200
+			settingSwitch_Y = 60
+		end
+		if i == 21 then
+			resetSwitch_X()
+			resetSwitch_Y()
+			useTogglePage = toggleContainer_page3
+		end
+
+		if i == 31 then
+			settingSwitch_X = 200
+			settingSwitch_Y = 60
+		end
+		if i == 41 then
+			resetSwitch_X()
+			resetSwitch_Y()
+			useTogglePage = toggleContainer_page4
+		end
+
+		if i == 51 then
+			settingSwitch_X = 200
+			settingSwitch_Y = 60
+		end
+		if i == 61 then
+			resetSwitch_X()
+			resetSwitch_Y()
+			useTogglePage = toggleContainer_page5
+		end
+
+		if i == 61 then
+			settingSwitch_X = 200
+			settingSwitch_Y = 60
+		end
+		if i == 71 then
+			resetSwitch_X()
+			resetSwitch_Y()
+			useTogglePage = toggleContainer_page6
+		end
+
+			--- Create Toggle Button
+		Blank_BTN = Geyser.Label:new({
+			name = loadedPluginsTables[i].shortName..&quot;_BTN&quot;,
+			x=settingSwitch_X, y=settingSwitch_Y,
+		   width=30, height=15,
+		}, useTogglePage)
+
+		--- Create Settings Button
+		Blank_Setting_BTN = Geyser.Label:new({
+			name = loadedPluginsTables[i].shortName..&quot;_Setting_BTN&quot;,
+			x=settingSwitch_X+40, y=settingSwitch_Y,
+		   width=20, height=15,
+		}, useTogglePage)
+
+		--- Create Button Name
+		Blank_Console = Geyser.MiniConsole:new({
+			name = loadedPluginsTables[i].shortName..&quot;_Console&quot;,
+			x=settingSwitch_X+70, y=settingSwitch_Y+2,
+		   width=100, height=20,
+		}, useTogglePage)
+
+	   setBackgroundColor(loadedPluginsTables[i].shortName..&quot;_Console&quot;,0,0,0,255);
+		clearWindow(loadedPluginsTables[i].shortName..&quot;_Console&quot;)
+		cecho(loadedPluginsTables[i].shortName..&quot;_Console&quot;, loadedPluginsTables[i].name)
+		setBackgroundColor(loadedPluginsTables[i].shortName..&quot;_BTN&quot;,0,0,0,0)
+
+		if loadedPluginsTables[i].turnedOn == 1 then
+			setBackgroundImage(loadedPluginsTables[i].shortName..&quot;_BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/smToggleOn.png&quot;)
+		else
+			setBackgroundImage(loadedPluginsTables[i].shortName..&quot;_BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/smToggleOff.png&quot;)
+		end
+
+		setBackgroundImage(loadedPluginsTables[i].shortName..&quot;_Setting_BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/GearIconSM.png&quot;)
+
+		settingSwitch_Y = settingSwitch_Y + 25
+
+		setLabelClickCallback(loadedPluginsTables[i].shortName..&quot;_BTN&quot;, loadedPluginsTables[i].callback)
+		setLabelClickCallback(loadedPluginsTables[i].shortName..&quot;_Setting_BTN&quot;, loadedPluginsTables[i].settings)
+	end	
+
+	resetSwitch_Y()
+	resetSwitch_X()
+	toggleContainer_page2:hide()
+	toggleContainer_page3:hide()
+	toggleContainer_page4:hide()
+	toggleContainer_page5:hide()
+	toggleContainer_page6:hide()
+end</script>
+                    <eventHandlerList/>
+                </Script>
+                <Script isActive="yes" isFolder="no">
+                    <name>Reset Switch Location</name>
+                    <packageName></packageName>
+                    <script>function resetSwitch_Y()
+	settingSwitch_Y = 60
+end
+
+function resetSwitch_X()
+	settingSwitch_X = 30
+end</script>
+                    <eventHandlerList/>
+                </Script>
+            </ScriptGroup>
+            <ScriptGroup isActive="yes" isFolder="yes">
+                <name>Extra Settings</name>
+                <packageName></packageName>
+                <script></script>
+                <eventHandlerList/>
+                <Script isActive="yes" isFolder="no">
+                    <name>Extra Settings Window</name>
+                    <packageName></packageName>
+                    <script>function extraSettingsFunction()
+------------------------------------------------------
+-- Extra Settings Container
+------------------------------------------------------
+
+	allSettingsWindow = Geyser.Container:new({
+		name = &quot;allSettingsWindow&quot;,
+		x=0, y=0,
+	   width = 400, height=315,
+	}, settingsWindow)
+
+------------------------------------------------------
+-- Extra Settings Background
+------------------------------------------------------
+
+	allSettingsBG = Geyser.Label:new({
+	  name = &quot;allSettingsBG&quot;,
+	  x=0, y=42,
+	  width=400, height=315,
+	}, allSettingsWindow)
+	setBackgroundImage(&quot;allSettingsBG&quot;, getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/extraSettings.png&quot;);
+
+------------------------------------------------------
+
+	allSettingscloseBTN = Geyser.Label:new({
+	  name = &quot;allSettingscloseBTN&quot;,
+	  x=375, y=0,
+	  width=25, height=25,
+	}, allSettingsWindow)
+	setBackgroundImage(&quot;allSettingscloseBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/closeBTN.png&quot;);
+
+------------------------------------------------------
+------------------------------------------------------
+
+	allSettingsUpBTN = Geyser.Label:new({
+	  name = &quot;allSettingsUpBTN&quot;,
+	  x=275, y=100,
+	  width=20, height=20,
+	}, allSettingsWindow)
+	setBackgroundImage(&quot;allSettingsUpBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/upBTN.png&quot;);
+
+------------------------------------------------------
+
+	allSettingsDownBTN = Geyser.Label:new({
+	  name = &quot;allSettingsDownBTN&quot;,
+	  x=275, y=150,
+	  width=20, height=20,
+	}, allSettingsWindow)
+	setBackgroundImage(&quot;allSettingsDownBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/downBTN.png&quot;);
+
+------------------------------------------------------
+
+	allSettingsLeftBTN = Geyser.Label:new({
+	  name = &quot;allSettingsLeftBTN&quot;,
+	  x=250, y=125,
+	  width=20, height=20,
+	}, allSettingsWindow)
+	setBackgroundImage(&quot;allSettingsLeftBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/leftBTN.png&quot;);
+
+------------------------------------------------------
+
+	allSettingsRightBTN = Geyser.Label:new({
+	  name = &quot;allSettingsRightBTN&quot;,
+	  x=300, y=125,
+	  width=20, height=20,
+	}, allSettingsWindow)
+	setBackgroundImage(&quot;allSettingsRightBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/rightBTN.png&quot;);
+
+------------------------------------------------------
+------------------------------------------------------
+
+	allSettingsWidthUpBTN = Geyser.Label:new({
+	  name = &quot;allSettingsWidthUpBTN&quot;,
+	  x=290, y=175,
+	  width=20, height=20,
+	}, allSettingsWindow)
+	setBackgroundImage(&quot;allSettingsWidthUpBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/wBTN.png&quot;);
+
+	allSettingsWidthDownBTN = Geyser.Label:new({
+	  name = &quot;allSettingsWidthDownBTN&quot;,
+	  x=260, y=175,
+	  width=20, height=20,
+	}, allSettingsWindow)
+	setBackgroundImage(&quot;allSettingsWidthDownBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/wBTN.png&quot;);
+
+------------------------------------------------------
+
+	allSettingsHeightUpBTN = Geyser.Label:new({
+	  name = &quot;allSettingsHeightUpBTN&quot;,
+	  x=225, y=110,
+	  width=20, height=20,
+	}, allSettingsWindow)
+	setBackgroundImage(&quot;allSettingsHeightUpBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/hBTN.png&quot;);
+
+	allSettingsHeightDownBTN = Geyser.Label:new({
+	  name = &quot;allSettingsHeightDownBTN&quot;,
+	  x=225, y=140,
+	  width=20, height=20,
+	}, allSettingsWindow)
+	setBackgroundImage(&quot;allSettingsHeightDownBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/hBTN.png&quot;);
+
+------------------------------------------------------
+------------------------------------------------------
+
+	allSettingsConsole = Geyser.MiniConsole:new({
+	  name = &quot;allSettingsConsole&quot;,
+	  x=225, y=225,
+	  width=150, height=85,
+	}, allSettingsWindow)
+   setBackgroundColor(&quot;allSettingsConsole&quot;,0,0,0,255);
+	allSettingsConsole:setWrap(30)
+	allSettingsConsole:setFontSize(13)
+
+------------------------------------------------------
+------------------------------------------------------
+
+	extra_modify_10BTN = Geyser.Label:new({
+	  name = &quot;extra_modify_10BTN&quot;,
+	  x=335, y=85,
+	  width=45, height=45,
+	}, allSettingsWindow)
+	setBackgroundImage(&quot;extra_modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10Off.png&quot;);
+
+	extra_modify_100BTN = Geyser.Label:new({
+	  name = &quot;extra_modify_100BTN&quot;,
+	  x=335, y=130,
+	  width=45, height=45,
+	}, allSettingsWindow)
+	setBackgroundImage(&quot;extra_modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100Off.png&quot;);
+
+------------------------------------------------------
+
+	setLabelClickCallback( &quot;allSettingscloseBTN&quot;, &quot;extraSettingsCloseCallback()&quot; )
+
+	setLabelClickCallback( &quot;extra_modify_10BTN&quot;, &quot;extra_Size10BTN()&quot; )
+	setLabelClickCallback( &quot;extra_modify_100BTN&quot;, &quot;extra_Size100BTN()&quot; ) 
+
+	setLabelClickCallback( &quot;allSettingsUpBTN&quot;, &quot;allSettingsUpButtonCallback()&quot; )
+	setLabelClickCallback( &quot;allSettingsDownBTN&quot;, &quot;allSettingsDownButtonCallback()&quot; )
+	setLabelClickCallback( &quot;allSettingsLeftBTN&quot;, &quot;allSettingsLeftButtonCallback()&quot; )
+	setLabelClickCallback( &quot;allSettingsRightBTN&quot;, &quot;allSettingsRightButtonCallback()&quot; )
+
+	setLabelClickCallback( &quot;allSettingsWidthUpBTN&quot;, &quot;allSettingsWidthUpButtonCallback()&quot; )
+	setLabelClickCallback( &quot;allSettingsWidthDownBTN&quot;, &quot;allSettingsWidthDownButtonCallback()&quot; )
+	setLabelClickCallback( &quot;allSettingsHeightUpBTN&quot;, &quot;allSettingsHeightUpButtonCallback()&quot; )
+	setLabelClickCallback( &quot;allSettingsHeightDownBTN&quot;, &quot;allSettingsHeightDownButtonCallback()&quot; )
+
+------------------------------------------------------
+
+	loadPluginOptionWindow()
+
+	allSettingsWindow:hide()
+
+end</script>
+                    <eventHandlerList/>
+                </Script>
+                <ScriptGroup isActive="yes" isFolder="yes">
+                    <name>Extra Button Callbacks</name>
+                    <packageName></packageName>
+                    <script>-------------------------------------------------
+--         Put your Lua functions here.        --
+--                                             --
+-- Note that you can also use external Scripts --
+-------------------------------------------------
+</script>
+                    <eventHandlerList/>
+                    <Script isActive="yes" isFolder="no">
+                        <name>Close Extra Settings</name>
+                        <packageName></packageName>
+                        <script>function extraSettingsCloseCallback() 
+	settingsExtraOpen = 0
+
+	Movement_Modifier = 1
+	setBackgroundImage(&quot;extra_modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10Off.png&quot;)
+	setBackgroundImage(&quot;extra_modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100Off.png&quot;)
+	setBackgroundImage(&quot;modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10Off.png&quot;)
+	setBackgroundImage(&quot;modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100Off.png&quot;)
+	modify_10BTNPushed = 0
+	modify_100BTNPushed = 0
+
+	savePluginChoice.move_x = selectedPluginSettingsMX
+	savePluginChoice.move_y = selectedPluginSettingsMY
+	savePluginChoice.size_x = selectedPluginSettingsSX
+	savePluginChoice.size_y = selectedPluginSettingsSY
+
+	updateBorderSettingsWindow()
+	allSettingsExtrasHide()
+
+	_G[savePluginChoice.options_hider]()
+
+end</script>
+                        <eventHandlerList/>
+                    </Script>
+                    <Script isActive="yes" isFolder="no">
+                        <name>Open Extra Settings</name>
+                        <packageName></packageName>
+                        <script>function extra_PluginCallback(pluginChoice)
+
+	if settingsExtraOpen == 0 then
+		settingsExtraOpen = 1	
+
+		noResizeOption = pluginChoice.noResizeOption
+
+		selectedPluginSettingsMX = pluginChoice.move_x
+		selectedPluginSettingsMY = pluginChoice.move_y
+		selectedPluginSettingsSX = pluginChoice.size_x
+		selectedPluginSettingsSY = pluginChoice.size_y
+
+		savePluginChoice = pluginChoice
+	
+		Movement_Modifier = 1
+		setBackgroundImage(&quot;extra_modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10Off.png&quot;)
+		setBackgroundImage(&quot;extra_modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100Off.png&quot;)
+		setBackgroundImage(&quot;modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10Off.png&quot;)
+		setBackgroundImage(&quot;modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100Off.png&quot;)
+		modify_10BTNPushed = 0
+		modify_100BTNPushed = 0
+
+		allSettingsExtrasShow() 				
+		updateAllConsole() 			
+		checkNoResize()
+
+		_G[savePluginChoice.options_hider]()
+
+	elseif settingsExtraOpen == 1 then
+
+		if noResizeOption == 1 then
+			allSettingsWidthUpBTN:hide()
+			allSettingsWidthDownBTN:hide()
+			allSettingsHeightUpBTN:hide()
+			allSettingsHeightDownBTN:hide()
+		elseif noResizeOption == 0 then
+			allSettingsWidthUpBTN:show()
+			allSettingsWidthDownBTN:show()
+			allSettingsHeightUpBTN:show()
+			allSettingsHeightDownBTN:show()
+		end
+
+
+		selectedPlugin:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		if selectedPluginCount == 2 then
+			selectedPlugin2:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 3 then
+			selectedPlugin3:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 4 then
+			selectedPlugin4:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 5 then
+			selectedPlugin5:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 6 then
+			selectedPlugin6:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 7 then
+			selectedPlugin7:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 8 then
+			selectedPlugin8:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 9 then
+			selectedPlugin9:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 10 then
+			selectedPlugin10:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+					
+		if pluginChoice.noResizeOption == 0 then
+			selectedPlugin:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+			if selectedPluginCount == 2 then
+				selectedPlugin2:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+			end
+			if selectedPluginCount == 3 then
+				selectedPlugin3:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+			end
+			if selectedPluginCount == 4 then
+				selectedPlugin4:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+			end
+			if selectedPluginCount == 5 then
+				selectedPlugin5:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+			end
+			if selectedPluginCount == 6 then
+				selectedPlugin6:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+			end
+			if selectedPluginCount == 7 then
+				selectedPlugin7:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+			end
+			if selectedPluginCount == 8 then
+				selectedPlugin8:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+			end
+			if selectedPluginCount == 9 then
+				selectedPlugin9:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+			end
+			if selectedPluginCount == 10 then
+				selectedPlugin10:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+			end
+		end
+
+		savePluginChoice = pluginChoice
+
+		updateAllConsole()
+	end
+end</script>
+                        <eventHandlerList/>
+                    </Script>
+                    <Script isActive="yes" isFolder="no">
+                        <name>10 / 100 Extra Buttons</name>
+                        <packageName></packageName>
+                        <script>function extra_Size10BTN()
+	if modify_10BTNPushed == 0 then
+		Movement_Modifier = 10
+		setBackgroundImage(&quot;extra_modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10On.png&quot;);
+		setBackgroundImage(&quot;extra_modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100Off.png&quot;);		
+		modify_10BTNPushed = 1
+		modify_100BTNPushed = 0
+	else
+		Movement_Modifier = 1
+		setBackgroundImage(&quot;extra_modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10Off.png&quot;);	
+		modify_10BTNPushed = 0
+		modify_100BTNPushed = 0
+	end
+end
+
+function extra_Size100BTN()
+	if modify_100BTNPushed == 0 then
+		Movement_Modifier = 100
+		setBackgroundImage(&quot;extra_modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100On.png&quot;);	
+		setBackgroundImage(&quot;extra_modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10Off.png&quot;);
+		modify_10BTNPushed = 0
+		modify_100BTNPushed = 1
+	else
+		Movement_Modifier = 1
+		setBackgroundImage(&quot;extra_modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100Off.png&quot;);	
+		modify_10BTNPushed = 0
+		modify_100BTNPushed = 0
+	end
+end
+</script>
+                        <eventHandlerList/>
+                    </Script>
+                    <Script isActive="yes" isFolder="no">
+                        <name>Extra  Movement Buttons</name>
+                        <packageName></packageName>
+                        <script>--------------------------------------------------------------------------
+-- Extra Settings Movement Buttons
+--------------------------------------------------------------------------
+
+function allSettingsUpButtonCallback()
+		newMovement_Y = selectedPluginSettingsMY - Movement_Modifier
+		selectedPluginSettingsMY = newMovement_Y
+		selectedPlugin:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		if selectedPluginCount == 2 then
+			selectedPlugin2:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 3 then
+			selectedPlugin3:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 4 then
+			selectedPlugin4:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 5 then
+			selectedPlugin5:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 6 then
+			selectedPlugin6:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 7 then
+			selectedPlugin7:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 8 then
+			selectedPlugin8:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 9 then
+			selectedPlugin9:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 10 then
+			selectedPlugin10:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+	savePluginChoice.move_x = selectedPluginSettingsMX
+	savePluginChoice.move_y = selectedPluginSettingsMY
+	savePluginChoice.size_x = selectedPluginSettingsSX
+	savePluginChoice.size_y = selectedPluginSettingsSY
+	updateAllConsole()
+end
+
+function allSettingsDownButtonCallback()
+		newMovement_Y = selectedPluginSettingsMY + Movement_Modifier
+		selectedPluginSettingsMY = newMovement_Y
+		selectedPlugin:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		if selectedPluginCount == 2 then
+			selectedPlugin2:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 3 then
+			selectedPlugin3:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 4 then
+			selectedPlugin4:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 5 then
+			selectedPlugin5:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 6 then
+			selectedPlugin6:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 7 then
+			selectedPlugin7:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 8 then
+			selectedPlugin8:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 9 then
+			selectedPlugin9:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 10 then
+			selectedPlugin10:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+	savePluginChoice.move_x = selectedPluginSettingsMX
+	savePluginChoice.move_y = selectedPluginSettingsMY
+	savePluginChoice.size_x = selectedPluginSettingsSX
+	savePluginChoice.size_y = selectedPluginSettingsSY
+	updateAllConsole()
+end
+
+function allSettingsLeftButtonCallback()
+		newMovement_X = selectedPluginSettingsMX - Movement_Modifier
+		selectedPluginSettingsMX = newMovement_X
+		selectedPlugin:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		if selectedPluginCount == 2 then
+			selectedPlugin2:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 3 then
+			selectedPlugin3:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 4 then
+			selectedPlugin4:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 5 then
+			selectedPlugin5:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 6 then
+			selectedPlugin6:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 7 then
+			selectedPlugin7:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 8 then
+			selectedPlugin8:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 9 then
+			selectedPlugin9:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 10 then
+			selectedPlugin10:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+	savePluginChoice.move_x = selectedPluginSettingsMX
+	savePluginChoice.move_y = selectedPluginSettingsMY
+	savePluginChoice.size_x = selectedPluginSettingsSX
+	savePluginChoice.size_y = selectedPluginSettingsSY
+	updateAllConsole()
+end
+
+function allSettingsRightButtonCallback()
+		newMovement_X = selectedPluginSettingsMX + Movement_Modifier
+		selectedPluginSettingsMX = newMovement_X
+		selectedPlugin:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		if selectedPluginCount == 2 then
+			selectedPlugin2:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 3 then
+			selectedPlugin3:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 4 then
+			selectedPlugin4:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 5 then
+			selectedPlugin5:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 6 then
+			selectedPlugin6:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 7 then
+			selectedPlugin7:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 8 then
+			selectedPlugin8:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 9 then
+			selectedPlugin9:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+		if selectedPluginCount == 10 then
+			selectedPlugin10:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
+		end
+	savePluginChoice.move_x = selectedPluginSettingsMX
+	savePluginChoice.move_y = selectedPluginSettingsMY
+	savePluginChoice.size_x = selectedPluginSettingsSX
+	savePluginChoice.size_y = selectedPluginSettingsSY
+	updateAllConsole()
+end
+
+function allSettingsWidthUpButtonCallback()
+		newSize_X = selectedPluginSettingsSX + Movement_Modifier
+		selectedPluginSettingsSX = newSize_X 
+
+		if selectedPlugin.name == &quot;dark_chat&quot; then
+			chat_table.size_x = selectedPluginSettingsSX
+			chat_table.size_y = selectedPluginSettingsSY
+			darkChat()
+		else
+			selectedPlugin:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+
+		if selectedPluginCount == 2 then
+			selectedPlugin2:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 3 then
+			selectedPlugin3:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 4 then
+			selectedPlugin4:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 5 then
+			selectedPlugin5:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 6 then
+			selectedPlugin6:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 7 then
+			selectedPlugin7:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 8 then
+			selectedPlugin8:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 9 then
+			selectedPlugin9:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 10 then
+			selectedPlugin10:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+	savePluginChoice.move_x = selectedPluginSettingsMX
+	savePluginChoice.move_y = selectedPluginSettingsMY
+	savePluginChoice.size_x = selectedPluginSettingsSX
+	savePluginChoice.size_y = selectedPluginSettingsSY
+	updateAllConsole()
+end
+
+function allSettingsWidthDownButtonCallback()
+		newSize_X = selectedPluginSettingsSX - Movement_Modifier
+		selectedPluginSettingsSX = newSize_X
+
+		if selectedPlugin.name == &quot;dark_chat&quot; then
+			chat_table.size_x = selectedPluginSettingsSX
+			chat_table.size_y = selectedPluginSettingsSY
+			darkChat()
+		else
+			selectedPlugin:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+
+		if selectedPluginCount == 2 then
+			selectedPlugin2:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 3 then
+			selectedPlugin3:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 4 then
+			selectedPlugin4:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 5 then
+			selectedPlugin5:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 6 then
+			selectedPlugin6:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 7 then
+			selectedPlugin7:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 8 then
+			selectedPlugin8:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 9 then
+			selectedPlugin9:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 10 then
+			selectedPlugin10:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+	savePluginChoice.move_x = selectedPluginSettingsMX
+	savePluginChoice.move_y = selectedPluginSettingsMY
+	savePluginChoice.size_x = selectedPluginSettingsSX
+	savePluginChoice.size_y = selectedPluginSettingsSY
+	updateAllConsole()
+end
+
+function allSettingsHeightUpButtonCallback()
+		newSize_Y = selectedPluginSettingsSY + Movement_Modifier
+		selectedPluginSettingsSY = newSize_Y 
+
+		if selectedPlugin.name == &quot;dark_chat&quot; then
+			chat_table.size_x = selectedPluginSettingsSX
+			chat_table.size_y = selectedPluginSettingsSY
+			darkChat()
+		else
+			selectedPlugin:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+
+		if selectedPluginCount == 2 then
+			selectedPlugin2:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 3 then
+			selectedPlugin3:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 4 then
+			selectedPlugin4:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 5 then
+			selectedPlugin5:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 6 then
+			selectedPlugin6:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 7 then
+			selectedPlugin7:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 8 then
+			selectedPlugin8:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 9 then
+			selectedPlugin9:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 10 then
+			selectedPlugin10:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+	savePluginChoice.move_x = selectedPluginSettingsMX
+	savePluginChoice.move_y = selectedPluginSettingsMY
+	savePluginChoice.size_x = selectedPluginSettingsSX
+	savePluginChoice.size_y = selectedPluginSettingsSY
+	updateAllConsole()
+end
+
+function allSettingsHeightDownButtonCallback()
+		newSize_Y = selectedPluginSettingsSY - Movement_Modifier
+		selectedPluginSettingsSY = newSize_Y
+
+		if selectedPlugin.name == &quot;dark_chat&quot; then
+			chat_table.size_x = selectedPluginSettingsSX
+			chat_table.size_y = selectedPluginSettingsSY
+			darkChat()
+		else
+			selectedPlugin:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+
+		if selectedPluginCount == 2 then
+			selectedPlugin2:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 3 then
+			selectedPlugin3:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 4 then
+			selectedPlugin4:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 5 then
+			selectedPlugin5:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 6 then
+			selectedPlugin6:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 7 then
+			selectedPlugin7:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 8 then
+			selectedPlugin8:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 9 then
+			selectedPlugin9:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+		if selectedPluginCount == 10 then
+			selectedPlugin10:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
+		end
+	savePluginChoice.move_x = selectedPluginSettingsMX
+	savePluginChoice.move_y = selectedPluginSettingsMY
+	savePluginChoice.size_x = selectedPluginSettingsSX
+	savePluginChoice.size_y = selectedPluginSettingsSY
+	updateAllConsole()
+end</script>
+                        <eventHandlerList/>
+                    </Script>
+                </ScriptGroup>
+                <ScriptGroup isActive="yes" isFolder="yes">
+                    <name>Extra Functions</name>
+                    <packageName></packageName>
+                    <script>-------------------------------------------------
+--         Put your Lua functions here.        --
+--                                             --
+-- Note that you can also use external Scripts --
+-------------------------------------------------
+</script>
+                    <eventHandlerList/>
+                    <Script isActive="yes" isFolder="no">
+                        <name>Hide / Show Extra Settings</name>
+                        <packageName></packageName>
+                        <script>function allSettingsExtrasShow()
+	allSettingsWindow:show()
+	allSettingsBG:show()
+	allSettingscloseBTN:show()
+	allSettingsConsole:show()
+	allSettingsWidthUpBTN:show()
+	allSettingsWidthDownBTN:show()
+	allSettingsHeightUpBTN:show()
+	allSettingsHeightDownBTN:show()
+	allSettingsUpBTN:show()
+	allSettingsDownBTN:show()
+	allSettingsLeftBTN:show()
+	allSettingsRightBTN:show()
+	extra_modify_10BTN:show() 			
+	extra_modify_100BTN:show()
+end
+
+function allSettingsExtrasHide()
+	allSettingsWindow:hide()
+	allSettingsBG:hide()
+	allSettingscloseBTN:hide()
+	allSettingsConsole:hide()
+	allSettingsWidthUpBTN:hide()
+	allSettingsWidthDownBTN:hide()
+	allSettingsHeightUpBTN:hide()
+	allSettingsHeightDownBTN:hide()
+	allSettingsUpBTN:hide()
+	allSettingsDownBTN:hide()
+	allSettingsLeftBTN:hide()
+	allSettingsRightBTN:hide()
+	extra_modify_10BTN:hide() 			
+	extra_modify_100BTN:hide()
+end</script>
+                        <eventHandlerList/>
+                    </Script>
+                    <Script isActive="yes" isFolder="no">
+                        <name>Console Updates</name>
+                        <packageName></packageName>
+                        <script>function updateAllConsole()
+	clearWindow(&quot;allSettingsConsole&quot;)
+	if noResizeOption == 0 then
+		cecho(&quot;allSettingsConsole&quot;, &quot;&lt;grey&gt; X     : &lt;green&gt;&quot;..selectedPluginSettingsMX..&quot;\n&quot;)
+		cecho(&quot;allSettingsConsole&quot;, &quot;&lt;grey&gt; Y     : &lt;green&gt;&quot;..selectedPluginSettingsMY..&quot;\n&quot;)
+		cecho(&quot;allSettingsConsole&quot;, &quot;&lt;grey&gt;Width  : &lt;green&gt;&quot;..selectedPluginSettingsSX..&quot;\n&quot;)
+		cecho(&quot;allSettingsConsole&quot;, &quot;&lt;grey&gt;Height : &lt;green&gt;&quot;..selectedPluginSettingsSY..&quot;\n&quot;)
+	else
+		cecho(&quot;allSettingsConsole&quot;, &quot;&lt;grey&gt; X     : &lt;green&gt;&quot;..selectedPluginSettingsMX..&quot;\n&quot;)
+		cecho(&quot;allSettingsConsole&quot;, &quot;&lt;grey&gt; Y     : &lt;green&gt;&quot;..selectedPluginSettingsMY..&quot;\n&quot;)
+	end
+end</script>
+                        <eventHandlerList/>
+                    </Script>
+                    <Script isActive="yes" isFolder="no">
+                        <name>Check if Resizable</name>
+                        <packageName></packageName>
+                        <script>
+function checkNoResize()
+	if noResizeOption == 1 then
+		allSettingsWidthUpBTN:hide()
+		allSettingsWidthDownBTN:hide()
+		allSettingsHeightUpBTN:hide()
+		allSettingsHeightDownBTN:hide()
+	end
+end</script>
+                        <eventHandlerList/>
+                    </Script>
+                    <Script isActive="yes" isFolder="no">
+                        <name>Load Plugin Options Windows</name>
+                        <packageName></packageName>
+                        <script>-------------------------------------------------
+function loadPluginOptionWindow()
+	for i=1, table.size(loadedPluginsTables), 1 do
+		_G[loadedPluginsTables[i].options]()
+	end
+end</script>
+                        <eventHandlerList/>
+                    </Script>
+                </ScriptGroup>
+            </ScriptGroup>
+            <Script isActive="yes" isFolder="no">
+                <name>HOW TO CREATE PLUGINS</name>
+                <packageName></packageName>
+                <script>-------------------------------------------------
+-- At least 1 table must exist for your plugin	--
+-- 															--
+-- ##### Can be anything you want					--
+-- In your profile folder you must have a		--
+--	folder that starts with /ZulahGUI_				--
+--	The file you save your table to must start	--
+--	with ZulahGUI_ and be in that folder			--
+-- The file must end with 1.lua						--
+--	The number is for the 4 layouts 1.lua 2.lua	--
+--	3.lua and 4.lua										--
+--															--
+-------------------------------------------------
+--
+--	ZulahGUI_0_ Folders are so art loads
+-- before everything else (So it's in the
+-- background) All elements layer according to
+-- first load on the bottom second load over
+-- that and so on and so on
+--
+-------------------------------------------------
+
+function CreateATableOnce()                                                   -- You only have to create this table ONCE for the plugin.
+	YOUR_PLUGIN_TABLE_NAME = {}																-- You do NOT have to include any of THIS code after creating.
+	YOUR_PLUGIN_TABLE_NAME = {
+		[&quot;tableName&quot;] = &quot;YOUR_PLUGIN_TABLE_NAME&quot;,										-- Must match the 3 other places you see here named the same
+--
+		[&quot;name&quot;] = &quot;#####&quot;,																	-- Create a name: &quot;Affliction Window&quot;
+		[&quot;shortName&quot;] = &quot;#####_plugin&quot;,														-- Used for code:	&quot;affliction_plugin&quot;
+		[&quot;callback&quot;] = &quot;#####_plugin_Callback&quot;,											-- Used when turned ON/OFF in settings
+		[&quot;settings&quot;] = &quot;#####_plugin_Settings&quot;,											-- Used to open options right side movement and resize window
+		[&quot;setup&quot;] = &quot;#####_plugin_Setup&quot;,													-- Setup the plugin everytime settings window is opened
+		[&quot;options&quot;] = &quot;#####_plugin_Options&quot;,												-- Used for extra plugin options left side
+		[&quot;options_hider&quot;] = &quot;#####_plugin_Options_Hider&quot;,								-- Function for hiding and showing the extra options
+		[&quot;save_location&quot;] = &quot;\\ZulahGUI_#####\\ZulahGUI_#####&quot;,						-- Where the file is saved before layout added
+		[&quot;noResizeOption&quot;] = 0,																-- If you want the size to be locked put 1
+		[&quot;turnedOn&quot;] = 0,																		-- Tells the system if the plugin was saved ON or OFF for layouts
+		[&quot;size_x&quot;] = 0,																			-- Width of plugin on the screen
+		[&quot;size_y&quot;] = 0,																			-- Height of plugin on the screen
+		[&quot;move_x&quot;] = 0,																			-- X (left right) location of plugin on the screen
+		[&quot;move_y&quot;] = 0,																			-- Y (Up down) location of plugin on the screen
+		[&quot;theme_used&quot;] = 1,																	-- If there is more than one theme 1 is the default
+		[&quot;theme_1_name&quot;] = &quot;#####&quot;,															-- Theme 1 name: &quot;Horizontal Health Bar&quot;
+		[&quot;theme_1_short&quot;] = &quot;#####&quot;,															-- Theme 1 name for coding: &quot;hori_hpbar&quot;
+		[&quot;theme_1_function&quot;] = &quot;#####&quot;,														-- Your main function	#####() create one for each theme
+																									-- Add as many themes as you want but number them in order
+-- Add as many keys and values as you need after the required ones above
+		[&quot;#####&quot;] = &quot;#####&quot;,
+		[&quot;#####&quot;] = &quot;#####&quot;,
+		[&quot;#####&quot;] = &quot;#####&quot;,
+	}
+
+	table.save(getMudletHomeDir()..&quot;/ZulahGUI_######/ZulahGUI_######1.lua&quot;, YOUR_PLUGIN_TABLE_NAME)	-- Note the: 1.lua --- This is the Default first table. It will be overwriten after settings are changed
+																																-- Others: 2.lua - 3.lua - 4.lua --- will be created on their own later
+end
+
+--------------------------------------------------
+--------------------------------------------------
+
+-- After that you need to create 6 functions and 1 container (More if you want them)
+
+-- 1: #####_plugin_Callback()		-- For when you press the toggle ON/OFF switch in settings
+
+-- 2: #####_plugin_Settings()		-- For when you press the gear beside the toggle switch in settings and open plugin options where movement and resize are automatically placed.
+
+-- 3: #####_plugin_Options()			-- For the left area of the plugins extra settings menu. This area is for Themes or other extra options. This function should have a container with the name: #####_plugin_Options_Container = Geyser.Container:new({ 
+
+-- 4: #####_plugin_Options_Hider()	-- This function is just a hide() -- show() for #####_plugin_Container
+
+-- 5: #####_plugin_Setup()			-- To setup, and place the plugin
+
+-- 6: Your main function	#####()	-- This is where you create the plugin itself. The main code you want to run. Include this function in the setupFunction()
+
+-- 7: #####_plugin_Container			-- This container goes with #####_plugin_Options() and #####_plugin_Options_Hider it's used for :hide() and :show() in the #####_plugin_Settings window
+
+--------------------------------------------------
+--------------------------------------------------
+
+</script>
+                <eventHandlerList/>
+            </Script>
+        </ScriptGroup>
+    </ScriptPackage>
+</MudletPackage>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE MudletPackage>
+<MudletPackage version="1.0">
+    <AliasPackage>
+        <Alias isActive="yes" isFolder="no">
+            <name>(LOADGUI)</name>
+            <script>sendGMCP([[Core.Supports.Add [&quot;Comm.Channel 1&quot;] ]])
+startupGUI()</script>
+            <command></command>
+            <packageName></packageName>
+            <regex>^loadgui$</regex>
+        </Alias>
+    </AliasPackage>
+</MudletPackage>
