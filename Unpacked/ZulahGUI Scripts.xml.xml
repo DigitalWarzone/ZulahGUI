@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE MudletPackage>
-<MudletPackage version="1.0">
+<MudletPackage version="1.001">
+    <TriggerPackage/>
+    <TimerPackage/>
+    <AliasPackage/>
+    <ActionPackage/>
     <ScriptPackage>
         <ScriptGroup isActive="yes" isFolder="yes">
             <name>ZulahGUI 2.0</name>
             <packageName></packageName>
-            <script></script>
+            <script>zgui = zgui or {}</script>
             <eventHandlerList/>
             <Script isActive="yes" isFolder="no">
                 <name>Initialize GUI</name>
@@ -2205,4 +2209,8 @@ end
             </Script>
         </ScriptGroup>
     </ScriptPackage>
+    <KeyPackage/>
+    <HelpPackage>
+        <helpURL/>
+    </HelpPackage>
 </MudletPackage>
