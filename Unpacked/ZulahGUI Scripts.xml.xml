@@ -25,7 +25,7 @@ function zgui.getImagesPath()
 	if gitpath then
 	  gitpath = gitpath:gsub(&quot;ZulahGUI Scripts.xml.xml&quot;, '')
 	else
-	  gitpath =  zgui.imgpath..&quot;/&quot;
+	  gitpath = zgui.imgpath..&quot;/&quot;
 	end
 
 	return gitpath
