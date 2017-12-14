@@ -1,16 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE MudletPackage>
-<MudletPackage version="1.0">
+<MudletPackage version="1.001">
+    <TriggerPackage/>
+    <TimerPackage/>
+    <AliasPackage/>
+    <ActionPackage/>
     <ScriptPackage>
         <ScriptGroup isActive="yes" isFolder="yes">
             <name>ZulahGUI 2.0</name>
             <packageName></packageName>
-            <script></script>
+            <script>zgui = zgui or {}</script>
             <eventHandlerList/>
             <Script isActive="yes" isFolder="no">
                 <name>Initialize GUI</name>
                 <packageName></packageName>
-                <script>function startupGUI()
+                <script>-- returns the installed location of the images, be it Git repo or as a package
+function zgui.getImagesPath()
+  local gitpath
+	
+	if getModulePath then
+	  gitpath = getModulePath(&quot;ZulahGUI Scripts&quot;)
+	end
+	
+	if gitpath then
+	  gitpath = gitpath:gsub(&quot;ZulahGUI Scripts.xml.xml&quot;, '')
+	else
+	  gitpath = getMudletHomeDir()..&quot;/ZulahGUI2/&quot;
+	end
+
+	return gitpath
+end
+
+function startupGUI()
 
 -----------------------------------------------------------------------------
 -- Don't mess with anything after this unless you KNOW what you're doing.
@@ -50,6 +71,8 @@
 
 	settingsPage = 1
 	pluginCounter = 0
+
+	zgui.imgpath = zgui.getImagesPath()
 
 	ZulahGUI2_VarTable = {}
 
@@ -127,10 +150,10 @@ end</script>
 	  x=0, y=0,
 	  width=400, height=425,
 	}, settingsWindow)
-	setBackgroundImage(&quot;settingsBG&quot;, getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/settingsMain.png&quot;);
+	setBackgroundImage(&quot;settingsBG&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/settingsMain.png&quot;);
 
 	------------------------------------------------------
-	-- Create Buttons 
+	-- Create Buttons
 	------------------------------------------------------
 
 	settingscloseBTN = Geyser.Label:new({
@@ -138,7 +161,7 @@ end</script>
 	  x=375, y=0,
 	  width=25, height=25,
 	}, settingsWindow)
-	setBackgroundImage(&quot;settingscloseBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/closeBTN.png&quot;);
+	setBackgroundImage(&quot;settingscloseBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/closeBTN.png&quot;);
 
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
@@ -148,14 +171,14 @@ end</script>
 	  x=335, y=45,
 	  width=45, height=45,
 	}, settingsWindow)
-	setBackgroundImage(&quot;modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10Off.png&quot;);
+	setBackgroundImage(&quot;modify_10BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size10Off.png&quot;);
 
 	modify_100BTN = Geyser.Label:new({
 	  name = &quot;modify_100BTN&quot;,
 	  x=335, y=90,
 	  width=45, height=45,
 	}, settingsWindow)
-	setBackgroundImage(&quot;modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100Off.png&quot;);
+	setBackgroundImage(&quot;modify_100BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size100Off.png&quot;);
 
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
@@ -165,14 +188,14 @@ end</script>
 	  x=25, y=50,
 	  width=20, height=20,
 	}, settingsWindow)
-	setBackgroundImage(&quot;topBorderLeftBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/leftBTN.png&quot;);
+	setBackgroundImage(&quot;topBorderLeftBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/leftBTN.png&quot;);
 
 	topBorderRightBTN = Geyser.Label:new({
 	  name = &quot;topBorderRightBTN&quot;,
 	  x=98, y=50,
 	  width=20, height=20,
 	}, settingsWindow)
-	setBackgroundImage(&quot;topBorderRightBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/rightBTN.png&quot;);
+	setBackgroundImage(&quot;topBorderRightBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/rightBTN.png&quot;);
 
 ----------------------------------------------------------------------
 
@@ -181,14 +204,14 @@ end</script>
 	  x=25, y=70,
 	  width=20, height=20,
 	}, settingsWindow)
-	setBackgroundImage(&quot;leftBorderLeftBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/leftBTN.png&quot;);
+	setBackgroundImage(&quot;leftBorderLeftBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/leftBTN.png&quot;);
 
 	leftBorderRightBTN = Geyser.Label:new({
 	  name = &quot;leftBorderRightBTN&quot;,
 	  x=98, y=70,
 	  width=20, height=20,
 	}, settingsWindow)
-	setBackgroundImage(&quot;leftBorderRightBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/rightBTN.png&quot;);
+	setBackgroundImage(&quot;leftBorderRightBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/rightBTN.png&quot;);
 
 ----------------------------------------------------------------------
 
@@ -197,14 +220,14 @@ end</script>
 	  x=25, y=90,
 	  width=20, height=20,
 	}, settingsWindow)
-	setBackgroundImage(&quot;rightBorderLeftBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/leftBTN.png&quot;);
+	setBackgroundImage(&quot;rightBorderLeftBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/leftBTN.png&quot;);
 
 	rightBorderRightBTN = Geyser.Label:new({
 	  name = &quot;rightBorderRightBTN&quot;,
 	  x=98, y=90,
 	  width=20, height=20,
 	}, settingsWindow)
-	setBackgroundImage(&quot;rightBorderRightBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/rightBTN.png&quot;);
+	setBackgroundImage(&quot;rightBorderRightBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/rightBTN.png&quot;);
 
 ----------------------------------------------------------------------
 
@@ -213,14 +236,14 @@ end</script>
 	  x=25, y=110,
 	  width=20, height=20,
 	}, settingsWindow)
-	setBackgroundImage(&quot;bottomBorderLeftBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/leftBTN.png&quot;);
+	setBackgroundImage(&quot;bottomBorderLeftBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/leftBTN.png&quot;);
 
 	bottomBorderRightBTN = Geyser.Label:new({
 	  name = &quot;bottomBorderRightBTN&quot;,
 	  x=98, y=110,
 	  width=20, height=20,
 	}, settingsWindow)
-	setBackgroundImage(&quot;bottomBorderRightBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/rightBTN.png&quot;);
+	setBackgroundImage(&quot;bottomBorderRightBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/rightBTN.png&quot;);
 
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
@@ -256,14 +279,14 @@ end</script>
 	  x=185, y=142,
 	  width=20, height=20,
 	}, settingsWindow)
-	setBackgroundImage(&quot;uiColorRSettingsUpBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/upBTN.png&quot;);
+	setBackgroundImage(&quot;uiColorRSettingsUpBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/upBTN.png&quot;);
 
 	uiColorRSettingsDownBTN = Geyser.Label:new({
 	  name = &quot;uiColorRSettingsDownBTN&quot;,
 	  x=185, y=197,
 	  width=20, height=20,
 	}, settingsWindow)
-	setBackgroundImage(&quot;uiColorRSettingsDownBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/downBTN.png&quot;);
+	setBackgroundImage(&quot;uiColorRSettingsDownBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/downBTN.png&quot;);
 
 
 	uiColorGSettingsUpBTN = Geyser.Label:new({
@@ -271,14 +294,14 @@ end</script>
 	  x=245, y=142,
 	  width=20, height=20,
 	}, settingsWindow)
-	setBackgroundImage(&quot;uiColorGSettingsUpBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/upBTN.png&quot;);
+	setBackgroundImage(&quot;uiColorGSettingsUpBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/upBTN.png&quot;);
 
 	uiColorGSettingsDownBTN = Geyser.Label:new({
 	  name = &quot;uiColorGSettingsDownBTN&quot;,
 	  x=245, y=197,
 	  width=20, height=20,
 	}, settingsWindow)
-	setBackgroundImage(&quot;uiColorGSettingsDownBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/downBTN.png&quot;);
+	setBackgroundImage(&quot;uiColorGSettingsDownBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/downBTN.png&quot;);
 
 
 	uiColorBSettingsUpBTN = Geyser.Label:new({
@@ -286,14 +309,14 @@ end</script>
 	  x=305, y=142,
 	  width=20, height=20,
 	}, settingsWindow)
-	setBackgroundImage(&quot;uiColorBSettingsUpBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/upBTN.png&quot;);
+	setBackgroundImage(&quot;uiColorBSettingsUpBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/upBTN.png&quot;);
 
 	uiColorBSettingsDownBTN = Geyser.Label:new({
 	  name = &quot;uiColorBSettingsDownBTN&quot;,
 	  x=305, y=197,
 	  width=20, height=20,
 	}, settingsWindow)
-	setBackgroundImage(&quot;uiColorBSettingsDownBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/downBTN.png&quot;);
+	setBackgroundImage(&quot;uiColorBSettingsDownBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/downBTN.png&quot;);
 
 ------------------------------------------------------
 ------------------------------------------------------
@@ -352,28 +375,28 @@ end</script>
 	  x=25, y=225,
 	  width=45, height=45,
 	}, settingsWindow)
-	setBackgroundImage(&quot;layout1BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/greenCheck.png&quot;);
+	setBackgroundImage(&quot;layout1BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/greenCheck.png&quot;);
 
 	layout2BTN = Geyser.Label:new({
 	  name = &quot;layout2BTN&quot;,
 	  x=25, y=270,
 	  width=45, height=45,
 	}, settingsWindow)
-	setBackgroundImage(&quot;layout2BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/emptyCheck.png&quot;);
+	setBackgroundImage(&quot;layout2BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/emptyCheck.png&quot;);
 
 	layout3BTN = Geyser.Label:new({
 	  name = &quot;layout3BTN&quot;,
 	  x=200, y=225,
 	  width=45, height=45,
 	}, settingsWindow)
-	setBackgroundImage(&quot;layout3BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/emptyCheck.png&quot;);
+	setBackgroundImage(&quot;layout3BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/emptyCheck.png&quot;);
 
 	layout4BTN = Geyser.Label:new({
 	  name = &quot;layout4BTN&quot;,
 	  x=200, y=270,
 	  width=45, height=45,
 	}, settingsWindow)
-	setBackgroundImage(&quot;layout4BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/emptyCheck.png&quot;);
+	setBackgroundImage(&quot;layout4BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/emptyCheck.png&quot;);
 
 --
 
@@ -431,14 +454,14 @@ end</script>
 	  x=120, y=330,
 	  width=20, height=20,
 	}, settingsWindow)
-	setBackgroundImage(&quot;prevPageBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/leftBTN.png&quot;);
+	setBackgroundImage(&quot;prevPageBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/leftBTN.png&quot;);
 
 	nextPageBTN = Geyser.Label:new({
 	  name = &quot;nextPageBTN&quot;,
 	  x=250, y=330,
 	  width=20, height=20,
 	}, settingsWindow)
-	setBackgroundImage(&quot;nextPageBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/rightBTN.png&quot;);
+	setBackgroundImage(&quot;nextPageBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/rightBTN.png&quot;);
 
 --
 
@@ -455,14 +478,14 @@ end</script>
 
 	clearWindow(&quot;pageConsole&quot;)
 	cecho(&quot;pageConsole&quot;, &quot;&lt;grey&gt; Page: &lt;green&gt;&quot;..settingsPage)
-	
+
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
 	setLabelClickCallback( &quot;settingscloseBTN&quot;, &quot;settingsCloseButtonCallback()&quot; )
 
 	setLabelClickCallback( &quot;modify_10BTN&quot;, &quot;fSize10BTN()&quot; )
-	setLabelClickCallback( &quot;modify_100BTN&quot;, &quot;fSize100BTN()&quot; ) 
+	setLabelClickCallback( &quot;modify_100BTN&quot;, &quot;fSize100BTN()&quot; )
 
 	setLabelClickCallback( &quot;topBorderLeftBTN&quot;, &quot;ftopBorderLeftBTN()&quot; )
 	setLabelClickCallback( &quot;topBorderRightBTN&quot;, &quot;ftopBorderRightBTN()&quot; )
@@ -471,7 +494,7 @@ end</script>
 	setLabelClickCallback( &quot;rightBorderLeftBTN&quot;, &quot;frightBorderLeftBTN()&quot; )
 	setLabelClickCallback( &quot;rightBorderRightBTN&quot;, &quot;frightBorderRightBTN()&quot; )
 	setLabelClickCallback( &quot;bottomBorderLeftBTN&quot;, &quot;fbottomBorderLeftBTN()&quot; )
-	setLabelClickCallback( &quot;bottomBorderRightBTN&quot;, &quot;fbottomBorderRightBTN()&quot; ) 
+	setLabelClickCallback( &quot;bottomBorderRightBTN&quot;, &quot;fbottomBorderRightBTN()&quot; )
 
 	setLabelClickCallback( &quot;uiColorRSettingsUpBTN&quot;, &quot;uiColorRSettingsUpButtonCallback()&quot; )
 	setLabelClickCallback( &quot;uiColorRSettingsDownBTN&quot;, &quot;uiColorRSettingsDownButtonCallback()&quot; )
@@ -509,11 +532,11 @@ end</script>
                     <Script isActive="yes" isFolder="no">
                         <name>Settings Close Button</name>
                         <packageName></packageName>
-                        <script>function settingsCloseButtonCallback() 
+                        <script>function settingsCloseButtonCallback()
 
 	Movement_Modifier = 1
-	setBackgroundImage(&quot;modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10Off.png&quot;)
-	setBackgroundImage(&quot;modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100Off.png&quot;)
+	setBackgroundImage(&quot;modify_10BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size10Off.png&quot;)
+	setBackgroundImage(&quot;modify_100BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size100Off.png&quot;)
 	modify_10BTNPushed = 0
 	modify_100BTNPushed = 0
 
@@ -532,8 +555,8 @@ end</script>
                         <packageName></packageName>
                         <script>function settingsBTNfunction()
 	-----------------------------
-	-- Check Mudlet Screen Size 
-	----------------------------- 	
+	-- Check Mudlet Screen Size
+	-----------------------------
 	selectedPluginCount = 1
 
 	WindowWidth=0;
@@ -547,8 +570,8 @@ end</script>
 	allSettingsWindow:hide()
 
 	Movement_Modifier = 1
-	setBackgroundImage(&quot;modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10Off.png&quot;)
-	setBackgroundImage(&quot;modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100Off.png&quot;)
+	setBackgroundImage(&quot;modify_10BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size10Off.png&quot;)
+	setBackgroundImage(&quot;modify_100BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size100Off.png&quot;)
 	modify_10BTNPushed = 0
 	modify_100BTNPushed = 0
 
@@ -587,13 +610,13 @@ end
 function fSize10BTN()
 	if modify_10BTNPushed == 0 then
 		Movement_Modifier = 10
-		setBackgroundImage(&quot;modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10On.png&quot;);
-		setBackgroundImage(&quot;modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100Off.png&quot;);		
+		setBackgroundImage(&quot;modify_10BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size10On.png&quot;);
+		setBackgroundImage(&quot;modify_100BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size100Off.png&quot;);
 		modify_10BTNPushed = 1
 		modify_100BTNPushed = 0
 	else
 		Movement_Modifier = 1
-		setBackgroundImage(&quot;modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10Off.png&quot;);	
+		setBackgroundImage(&quot;modify_10BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size10Off.png&quot;);
 		modify_10BTNPushed = 0
 		modify_100BTNPushed = 0
 	end
@@ -602,13 +625,13 @@ end
 function fSize100BTN()
 	if modify_100BTNPushed == 0 then
 		Movement_Modifier = 100
-		setBackgroundImage(&quot;modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100On.png&quot;);	
-		setBackgroundImage(&quot;modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10Off.png&quot;);
+		setBackgroundImage(&quot;modify_100BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size100On.png&quot;);
+		setBackgroundImage(&quot;modify_10BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size10Off.png&quot;);
 		modify_10BTNPushed = 0
 		modify_100BTNPushed = 1
 	else
 		Movement_Modifier = 1
-		setBackgroundImage(&quot;modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100Off.png&quot;);	
+		setBackgroundImage(&quot;modify_100BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size100Off.png&quot;);
 		modify_10BTNPushed = 0
 		modify_100BTNPushed = 0
 	end
@@ -680,7 +703,7 @@ end</script>
                         <script>
 function layout1BTN_Callback()
 	clearLayoutBTN()
-	setBackgroundImage(&quot;layout1BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/greenCheck.png&quot;);
+	setBackgroundImage(&quot;layout1BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/greenCheck.png&quot;);
 	zlayout = 1
 	savedLayoutName = &quot;Default&quot;
 	loadZulahGUIVariables()
@@ -689,7 +712,7 @@ end
 
 function layout2BTN_Callback()
 	clearLayoutBTN()
-	setBackgroundImage(&quot;layout2BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/greenCheck.png&quot;);
+	setBackgroundImage(&quot;layout2BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/greenCheck.png&quot;);
 	zlayout = 2
 	savedLayoutName = &quot;Layout 2&quot;
 	loadZulahGUIVariables()
@@ -698,7 +721,7 @@ end
 
 function layout3BTN_Callback()
 	clearLayoutBTN()
-	setBackgroundImage(&quot;layout3BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/greenCheck.png&quot;);
+	setBackgroundImage(&quot;layout3BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/greenCheck.png&quot;);
 	zlayout = 3
 	savedLayoutName = &quot;Layout 3&quot;
 	loadZulahGUIVariables()
@@ -707,7 +730,7 @@ end
 
 function layout4BTN_Callback()
 	clearLayoutBTN()
-	setBackgroundImage(&quot;layout4BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/greenCheck.png&quot;);
+	setBackgroundImage(&quot;layout4BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/greenCheck.png&quot;);
 	zlayout = 4
 	savedLayoutName = &quot;Layout 4&quot;
 	loadZulahGUIVariables()
@@ -715,10 +738,10 @@ function layout4BTN_Callback()
 end
 
 function clearLayoutBTN()
-	setBackgroundImage(&quot;layout1BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/emptyCheck.png&quot;);
-	setBackgroundImage(&quot;layout2BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/emptyCheck.png&quot;);
-	setBackgroundImage(&quot;layout3BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/emptyCheck.png&quot;);
-	setBackgroundImage(&quot;layout4BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/emptyCheck.png&quot;);
+	setBackgroundImage(&quot;layout1BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/emptyCheck.png&quot;);
+	setBackgroundImage(&quot;layout2BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/emptyCheck.png&quot;);
+	setBackgroundImage(&quot;layout3BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/emptyCheck.png&quot;);
+	setBackgroundImage(&quot;layout4BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/emptyCheck.png&quot;);
 end</script>
                         <eventHandlerList/>
                     </Script>
@@ -817,7 +840,7 @@ end</script>
                         <script>
 function prevPageBTN_Callback()
 	if settingsPage == 2 then
-		setBackgroundImage(&quot;settingsBG&quot;, getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/settingsMain.png&quot;);
+		setBackgroundImage(&quot;settingsBG&quot;,  zgui.imgpath..&quot;/MainSettings/Artwork/settingsMain.png&quot;);
 		showSettingsMain()
 		prevPageBTN:hide()
 		toggleContainer_page2:hide()
@@ -848,7 +871,7 @@ end
 function nextPageBTN_Callback()
 	if settingsPage == 1 then
 		toggleContainer_page2:show()
-	end		
+	end
 
 	if settingsPage == 2 then
 		toggleContainer_page3:show()
@@ -871,7 +894,7 @@ function nextPageBTN_Callback()
 		nextPageBTN:hide()
 	end
 
-	setBackgroundImage(&quot;settingsBG&quot;, getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/settingsPage.png&quot;);
+	setBackgroundImage(&quot;settingsBG&quot;,  zgui.imgpath..&quot;/MainSettings/Artwork/settingsPage.png&quot;);
 	hideSettingsMain()
 	prevPageBTN:show()
 	settingsPage = settingsPage + 1
@@ -1001,7 +1024,7 @@ end</script>
 	  width=40, height=30,
 	})
 	setBackgroundColor(&quot;settingsBTN&quot;,0,0,0,0)
-	setBackgroundImage(&quot;settingsBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/GearIcon.png&quot;)
+	setBackgroundImage(&quot;settingsBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/GearIcon.png&quot;)
 
 
 	setLabelClickCallback( &quot;settingsBTN&quot;, &quot;settingsBTNfunction()&quot; )
@@ -1026,7 +1049,7 @@ end</script>
                     <script>function saveZulahGUIVariables()
 	fillZulahGUI2_Table()
 	savePluginLayouts()
-	table.save(getMudletHomeDir()..&quot;/ZulahGUI2/Layouts/layout_&quot;..zlayout..&quot;.lua&quot;, ZulahGUI2_VarTable)
+	table.save( zgui.imgpath..&quot;/Layouts/layout_&quot;..zlayout..&quot;.lua&quot;, ZulahGUI2_VarTable)
 end
 
 function fillZulahGUI2_Table()
@@ -1065,7 +1088,7 @@ end</script>
 ------------------------------------------------------
 
 function loadZulahGUIVariables()
-	table.load(getMudletHomeDir()..&quot;/ZulahGUI2/Layouts/layout_&quot;..zlayout..&quot;.lua&quot;, ZulahGUI2_VarTable)
+	table.load( zgui.imgpath..&quot;/Layouts/layout_&quot;..zlayout..&quot;.lua&quot;, ZulahGUI2_VarTable)
 	callZulahGUI2_Table()
 	loadPluginLayouts()
 end
@@ -1146,22 +1169,22 @@ end</script>
 	local tempPluginHolder = {}
 
 	for file in lfs.dir( doc_path ) do
-		if string.starts(file, &quot;ZulahGUI_&quot;) then			
+		if string.starts(file, &quot;ZulahGUI_&quot;) then
 		checkDir = (getMudletHomeDir()..&quot;/&quot;..file)
 			for file in lfs.dir(checkDir) do
-			if string.starts(file, &quot;ZulahGUI_&quot;) then	
+			if string.starts(file, &quot;ZulahGUI_&quot;) then
 				tempPluginHolder = {}
 				if zlayout == 1 then
-					if string.ends(file, &quot;1.lua&quot;) then					
-						table.load(checkDir..&quot;/&quot;..file, tempPluginHolder)	
-						table.load(getMudletHomeDir()..tempPluginHolder.save_location..zlayout..&quot;.lua&quot;, _G[tempPluginHolder.tableName])		
-						table.insert(loadedPluginsTables, tempPluginHolder)			
-						_G[tempPluginHolder.setup]()				
+					if string.ends(file, &quot;1.lua&quot;) then
+						table.load(checkDir..&quot;/&quot;..file, tempPluginHolder)
+						table.load(getMudletHomeDir()..tempPluginHolder.save_location..zlayout..&quot;.lua&quot;, _G[tempPluginHolder.tableName])
+						table.insert(loadedPluginsTables, tempPluginHolder)
+						_G[tempPluginHolder.setup]()
 					end
 				end
 				if zlayout == 2 then
-					if string.ends(file, &quot;2.lua&quot;) then		
-						table.load(checkDir..&quot;/&quot;..file, tempPluginHolder)	
+					if string.ends(file, &quot;2.lua&quot;) then
+						table.load(checkDir..&quot;/&quot;..file, tempPluginHolder)
 						table.load(getMudletHomeDir()..tempPluginHolder.save_location..zlayout..&quot;.lua&quot;, _G[tempPluginHolder.tableName])
 						table.insert(loadedPluginsTables, tempPluginHolder)
 						_G[tempPluginHolder.setup]()
@@ -1169,8 +1192,8 @@ end</script>
 				end
 
 				if zlayout == 3 then
-					if string.ends(file, &quot;3.lua&quot;) then		
-						table.load(checkDir..&quot;/&quot;..file, tempPluginHolder)	
+					if string.ends(file, &quot;3.lua&quot;) then
+						table.load(checkDir..&quot;/&quot;..file, tempPluginHolder)
 						table.load(getMudletHomeDir()..tempPluginHolder.save_location..zlayout..&quot;.lua&quot;, _G[tempPluginHolder.tableName])
 						table.insert(loadedPluginsTables, tempPluginHolder)
 						_G[tempPluginHolder.setup]()
@@ -1178,8 +1201,8 @@ end</script>
 				end
 
 				if zlayout == 4 then
-					if string.ends(file, &quot;4.lua&quot;) then		
-						table.load(checkDir..&quot;/&quot;..file, tempPluginHolder)	
+					if string.ends(file, &quot;4.lua&quot;) then
+						table.load(checkDir..&quot;/&quot;..file, tempPluginHolder)
 						table.load(getMudletHomeDir()..tempPluginHolder.save_location..zlayout..&quot;.lua&quot;, _G[tempPluginHolder.tableName])
 						table.insert(loadedPluginsTables, tempPluginHolder)
 						_G[tempPluginHolder.setup]()
@@ -1229,7 +1252,7 @@ end</script>
 
 	useTogglePage = toggleContainer_page2
 	for i=1, table.size(loadedPluginsTables), 1 do
-		
+
 		if i == 11 then
 			settingSwitch_X = 200
 			settingSwitch_Y = 60
@@ -1297,18 +1320,18 @@ end</script>
 		setBackgroundColor(loadedPluginsTables[i].shortName..&quot;_BTN&quot;,0,0,0,0)
 
 		if loadedPluginsTables[i].turnedOn == 1 then
-			setBackgroundImage(loadedPluginsTables[i].shortName..&quot;_BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/smToggleOn.png&quot;)
+			setBackgroundImage(loadedPluginsTables[i].shortName..&quot;_BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/smToggleOn.png&quot;)
 		else
-			setBackgroundImage(loadedPluginsTables[i].shortName..&quot;_BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/smToggleOff.png&quot;)
+			setBackgroundImage(loadedPluginsTables[i].shortName..&quot;_BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/smToggleOff.png&quot;)
 		end
 
-		setBackgroundImage(loadedPluginsTables[i].shortName..&quot;_Setting_BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/GearIconSM.png&quot;)
+		setBackgroundImage(loadedPluginsTables[i].shortName..&quot;_Setting_BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/GearIconSM.png&quot;)
 
 		settingSwitch_Y = settingSwitch_Y + 25
 
 		setLabelClickCallback(loadedPluginsTables[i].shortName..&quot;_BTN&quot;, loadedPluginsTables[i].callback)
 		setLabelClickCallback(loadedPluginsTables[i].shortName..&quot;_Setting_BTN&quot;, loadedPluginsTables[i].settings)
-	end	
+	end
 
 	resetSwitch_Y()
 	resetSwitch_X()
@@ -1361,7 +1384,7 @@ end</script>
 	  x=0, y=42,
 	  width=400, height=315,
 	}, allSettingsWindow)
-	setBackgroundImage(&quot;allSettingsBG&quot;, getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/extraSettings.png&quot;);
+	setBackgroundImage(&quot;allSettingsBG&quot;,  zgui.imgpath..&quot;/MainSettings/Artwork/extraSettings.png&quot;);
 
 ------------------------------------------------------
 
@@ -1370,7 +1393,7 @@ end</script>
 	  x=375, y=0,
 	  width=25, height=25,
 	}, allSettingsWindow)
-	setBackgroundImage(&quot;allSettingscloseBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/closeBTN.png&quot;);
+	setBackgroundImage(&quot;allSettingscloseBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/closeBTN.png&quot;);
 
 ------------------------------------------------------
 ------------------------------------------------------
@@ -1380,7 +1403,7 @@ end</script>
 	  x=275, y=100,
 	  width=20, height=20,
 	}, allSettingsWindow)
-	setBackgroundImage(&quot;allSettingsUpBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/upBTN.png&quot;);
+	setBackgroundImage(&quot;allSettingsUpBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/upBTN.png&quot;);
 
 ------------------------------------------------------
 
@@ -1389,7 +1412,7 @@ end</script>
 	  x=275, y=150,
 	  width=20, height=20,
 	}, allSettingsWindow)
-	setBackgroundImage(&quot;allSettingsDownBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/downBTN.png&quot;);
+	setBackgroundImage(&quot;allSettingsDownBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/downBTN.png&quot;);
 
 ------------------------------------------------------
 
@@ -1398,7 +1421,7 @@ end</script>
 	  x=250, y=125,
 	  width=20, height=20,
 	}, allSettingsWindow)
-	setBackgroundImage(&quot;allSettingsLeftBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/leftBTN.png&quot;);
+	setBackgroundImage(&quot;allSettingsLeftBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/leftBTN.png&quot;);
 
 ------------------------------------------------------
 
@@ -1407,7 +1430,7 @@ end</script>
 	  x=300, y=125,
 	  width=20, height=20,
 	}, allSettingsWindow)
-	setBackgroundImage(&quot;allSettingsRightBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/rightBTN.png&quot;);
+	setBackgroundImage(&quot;allSettingsRightBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/rightBTN.png&quot;);
 
 ------------------------------------------------------
 ------------------------------------------------------
@@ -1417,14 +1440,14 @@ end</script>
 	  x=290, y=175,
 	  width=20, height=20,
 	}, allSettingsWindow)
-	setBackgroundImage(&quot;allSettingsWidthUpBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/wBTN.png&quot;);
+	setBackgroundImage(&quot;allSettingsWidthUpBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/wBTN.png&quot;);
 
 	allSettingsWidthDownBTN = Geyser.Label:new({
 	  name = &quot;allSettingsWidthDownBTN&quot;,
 	  x=260, y=175,
 	  width=20, height=20,
 	}, allSettingsWindow)
-	setBackgroundImage(&quot;allSettingsWidthDownBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/wBTN.png&quot;);
+	setBackgroundImage(&quot;allSettingsWidthDownBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/wBTN.png&quot;);
 
 ------------------------------------------------------
 
@@ -1433,14 +1456,14 @@ end</script>
 	  x=225, y=110,
 	  width=20, height=20,
 	}, allSettingsWindow)
-	setBackgroundImage(&quot;allSettingsHeightUpBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/hBTN.png&quot;);
+	setBackgroundImage(&quot;allSettingsHeightUpBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/hBTN.png&quot;);
 
 	allSettingsHeightDownBTN = Geyser.Label:new({
 	  name = &quot;allSettingsHeightDownBTN&quot;,
 	  x=225, y=140,
 	  width=20, height=20,
 	}, allSettingsWindow)
-	setBackgroundImage(&quot;allSettingsHeightDownBTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/hBTN.png&quot;);
+	setBackgroundImage(&quot;allSettingsHeightDownBTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/hBTN.png&quot;);
 
 ------------------------------------------------------
 ------------------------------------------------------
@@ -1462,21 +1485,21 @@ end</script>
 	  x=335, y=85,
 	  width=45, height=45,
 	}, allSettingsWindow)
-	setBackgroundImage(&quot;extra_modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10Off.png&quot;);
+	setBackgroundImage(&quot;extra_modify_10BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size10Off.png&quot;);
 
 	extra_modify_100BTN = Geyser.Label:new({
 	  name = &quot;extra_modify_100BTN&quot;,
 	  x=335, y=130,
 	  width=45, height=45,
 	}, allSettingsWindow)
-	setBackgroundImage(&quot;extra_modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100Off.png&quot;);
+	setBackgroundImage(&quot;extra_modify_100BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size100Off.png&quot;);
 
 ------------------------------------------------------
 
 	setLabelClickCallback( &quot;allSettingscloseBTN&quot;, &quot;extraSettingsCloseCallback()&quot; )
 
 	setLabelClickCallback( &quot;extra_modify_10BTN&quot;, &quot;extra_Size10BTN()&quot; )
-	setLabelClickCallback( &quot;extra_modify_100BTN&quot;, &quot;extra_Size100BTN()&quot; ) 
+	setLabelClickCallback( &quot;extra_modify_100BTN&quot;, &quot;extra_Size100BTN()&quot; )
 
 	setLabelClickCallback( &quot;allSettingsUpBTN&quot;, &quot;allSettingsUpButtonCallback()&quot; )
 	setLabelClickCallback( &quot;allSettingsDownBTN&quot;, &quot;allSettingsDownButtonCallback()&quot; )
@@ -1510,14 +1533,14 @@ end</script>
                     <Script isActive="yes" isFolder="no">
                         <name>Close Extra Settings</name>
                         <packageName></packageName>
-                        <script>function extraSettingsCloseCallback() 
+                        <script>function extraSettingsCloseCallback()
 	settingsExtraOpen = 0
 
 	Movement_Modifier = 1
-	setBackgroundImage(&quot;extra_modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10Off.png&quot;)
-	setBackgroundImage(&quot;extra_modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100Off.png&quot;)
-	setBackgroundImage(&quot;modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10Off.png&quot;)
-	setBackgroundImage(&quot;modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100Off.png&quot;)
+	setBackgroundImage(&quot;extra_modify_10BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size10Off.png&quot;)
+	setBackgroundImage(&quot;extra_modify_100BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size100Off.png&quot;)
+	setBackgroundImage(&quot;modify_10BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size10Off.png&quot;)
+	setBackgroundImage(&quot;modify_100BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size100Off.png&quot;)
 	modify_10BTNPushed = 0
 	modify_100BTNPushed = 0
 
@@ -1540,7 +1563,7 @@ end</script>
                         <script>function extra_PluginCallback(pluginChoice)
 
 	if settingsExtraOpen == 0 then
-		settingsExtraOpen = 1	
+		settingsExtraOpen = 1
 
 		noResizeOption = pluginChoice.noResizeOption
 
@@ -1550,17 +1573,17 @@ end</script>
 		selectedPluginSettingsSY = pluginChoice.size_y
 
 		savePluginChoice = pluginChoice
-	
+
 		Movement_Modifier = 1
-		setBackgroundImage(&quot;extra_modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10Off.png&quot;)
-		setBackgroundImage(&quot;extra_modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100Off.png&quot;)
-		setBackgroundImage(&quot;modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10Off.png&quot;)
-		setBackgroundImage(&quot;modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100Off.png&quot;)
+		setBackgroundImage(&quot;extra_modify_10BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size10Off.png&quot;)
+		setBackgroundImage(&quot;extra_modify_100BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size100Off.png&quot;)
+		setBackgroundImage(&quot;modify_10BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size10Off.png&quot;)
+		setBackgroundImage(&quot;modify_100BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size100Off.png&quot;)
 		modify_10BTNPushed = 0
 		modify_100BTNPushed = 0
 
-		allSettingsExtrasShow() 				
-		updateAllConsole() 			
+		allSettingsExtrasShow()
+		updateAllConsole()
 		checkNoResize()
 
 		_G[savePluginChoice.options_hider]()
@@ -1608,7 +1631,7 @@ end</script>
 		if selectedPluginCount == 10 then
 			selectedPlugin10:move(selectedPluginSettingsMX, selectedPluginSettingsMY)
 		end
-					
+
 		if pluginChoice.noResizeOption == 0 then
 			selectedPlugin:resize(selectedPluginSettingsSX, selectedPluginSettingsSY)
 			if selectedPluginCount == 2 then
@@ -1653,13 +1676,13 @@ end</script>
                         <script>function extra_Size10BTN()
 	if modify_10BTNPushed == 0 then
 		Movement_Modifier = 10
-		setBackgroundImage(&quot;extra_modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10On.png&quot;);
-		setBackgroundImage(&quot;extra_modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100Off.png&quot;);		
+		setBackgroundImage(&quot;extra_modify_10BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size10On.png&quot;);
+		setBackgroundImage(&quot;extra_modify_100BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size100Off.png&quot;);
 		modify_10BTNPushed = 1
 		modify_100BTNPushed = 0
 	else
 		Movement_Modifier = 1
-		setBackgroundImage(&quot;extra_modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10Off.png&quot;);	
+		setBackgroundImage(&quot;extra_modify_10BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size10Off.png&quot;);
 		modify_10BTNPushed = 0
 		modify_100BTNPushed = 0
 	end
@@ -1668,13 +1691,13 @@ end
 function extra_Size100BTN()
 	if modify_100BTNPushed == 0 then
 		Movement_Modifier = 100
-		setBackgroundImage(&quot;extra_modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100On.png&quot;);	
-		setBackgroundImage(&quot;extra_modify_10BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size10Off.png&quot;);
+		setBackgroundImage(&quot;extra_modify_100BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size100On.png&quot;);
+		setBackgroundImage(&quot;extra_modify_10BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size10Off.png&quot;);
 		modify_10BTNPushed = 0
 		modify_100BTNPushed = 1
 	else
 		Movement_Modifier = 1
-		setBackgroundImage(&quot;extra_modify_100BTN&quot;,getMudletHomeDir()..&quot;/ZulahGUI2/MainSettings/Artwork/size100Off.png&quot;);	
+		setBackgroundImage(&quot;extra_modify_100BTN&quot;, zgui.imgpath..&quot;/MainSettings/Artwork/size100Off.png&quot;);
 		modify_10BTNPushed = 0
 		modify_100BTNPushed = 0
 	end
@@ -1843,7 +1866,7 @@ end
 
 function allSettingsWidthUpButtonCallback()
 		newSize_X = selectedPluginSettingsSX + Movement_Modifier
-		selectedPluginSettingsSX = newSize_X 
+		selectedPluginSettingsSX = newSize_X
 
 		if selectedPlugin.name == &quot;dark_chat&quot; then
 			chat_table.size_x = selectedPluginSettingsSX
@@ -1935,7 +1958,7 @@ end
 
 function allSettingsHeightUpButtonCallback()
 		newSize_Y = selectedPluginSettingsSY + Movement_Modifier
-		selectedPluginSettingsSY = newSize_Y 
+		selectedPluginSettingsSY = newSize_Y
 
 		if selectedPlugin.name == &quot;dark_chat&quot; then
 			chat_table.size_x = selectedPluginSettingsSX
@@ -2053,7 +2076,7 @@ end</script>
 	allSettingsDownBTN:show()
 	allSettingsLeftBTN:show()
 	allSettingsRightBTN:show()
-	extra_modify_10BTN:show() 			
+	extra_modify_10BTN:show()
 	extra_modify_100BTN:show()
 end
 
@@ -2070,7 +2093,7 @@ function allSettingsExtrasHide()
 	allSettingsDownBTN:hide()
 	allSettingsLeftBTN:hide()
 	allSettingsRightBTN:hide()
-	extra_modify_10BTN:hide() 			
+	extra_modify_10BTN:hide()
 	extra_modify_100BTN:hide()
 end</script>
                         <eventHandlerList/>
@@ -2187,7 +2210,7 @@ end
 
 -- 2: #####_plugin_Settings()		-- For when you press the gear beside the toggle switch in settings and open plugin options where movement and resize are automatically placed.
 
--- 3: #####_plugin_Options()			-- For the left area of the plugins extra settings menu. This area is for Themes or other extra options. This function should have a container with the name: #####_plugin_Options_Container = Geyser.Container:new({ 
+-- 3: #####_plugin_Options()			-- For the left area of the plugins extra settings menu. This area is for Themes or other extra options. This function should have a container with the name: #####_plugin_Options_Container = Geyser.Container:new({
 
 -- 4: #####_plugin_Options_Hider()	-- This function is just a hide() -- show() for #####_plugin_Container
 
@@ -2205,4 +2228,8 @@ end
             </Script>
         </ScriptGroup>
     </ScriptPackage>
+    <KeyPackage/>
+    <HelpPackage>
+        <helpURL></helpURL>
+    </HelpPackage>
 </MudletPackage>
